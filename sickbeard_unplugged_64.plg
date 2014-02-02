@@ -356,26 +356,26 @@ sickbeard_datacheck()
 sickbeard_updateplg()
 {
 	cd /boot/config/plugins
-	[ -f sickbeard_unplugged.plg.old ] && rm -f sickbeard_unplugged.plg.old
-	if [ -f sickbeard_unplugged.plg ]; then
-	mv sickbeard_unplugged.plg sickbeard_unplugged.plg.old
+	[ -f sickbeard_unplugged_64.plg.old ] && rm -f sickbeard_unplugged_64.plg.old
+	if [ -f sickbeard_unplugged_64.plg ]; then
+	mv sickbeard_unplugged_64.plg sickbeard_unplugged_64.plg.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/sickbeard_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/sickbeard_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged_64.plg
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/sickbeard_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/sickbeard_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged_64.plg
 	fi
 }
 sickbeard_downgradeplg()
 {
 	cd /boot/config/plugins
-	if [ -f sickbeard_unplugged.plg.old ]; then
-	rm -f /sickbeard_unplugged.plg
-	mv sickbeard_unplugged.plg.old sickbeard_unplugged.plg
+	if [ -f sickbeard_unplugged_64.plg.old ]; then
+	rm -f /sickbeard_unplugged_64.plg
+	mv sickbeard_unplugged_64.plg.old sickbeard_unplugged_64.plg
 	echo "downgrading plugin"
-	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sickbeard_unplugged_64.plg
 	fi
 }
 
@@ -461,7 +461,7 @@ Title="SickBeard"
 <?PHP
 $sickbeard_cfg = parse_ini_file( "/boot/config/plugins/sickbeard/sickbeard.cfg" );
 $sickbeard_installed = file_exists( $sickbeard_cfg["INSTALLDIR"] . "/SickBeard.py" ) ? "yes" : "no";
-$sickbeard_rollback = file_exists( "boot/config/plugins/sickbeard_unplugged.plg.old" ) ? "yes" : "no";
+$sickbeard_rollback = file_exists( "boot/config/plugins/sickbeard_unplugged_64.plg.old" ) ? "yes" : "no";
 if ($sickbeard_installed=="yes")
 {
 	$sickbeard_running = file_exists( "/var/run/sickbeard/sickbeard.pid") ? "yes" : "no";
