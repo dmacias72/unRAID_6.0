@@ -384,11 +384,7 @@ apache_newver()
 {
 	set -x
 	source /boot/config/plugins/apache/apache.cfg
-	cd /tmp/
-	wget -q -O feed.atom --no-check-certificate $INSTALLURL/commits/$BRANCH.atom 
-	newver=`cat feed.atom | sed -n 's|tag:github.com,2008:Grit::Commit/\(.*\)|\\1|p' | sed '1q;d' | cut -d' ' -f5- | sed 's/....\(.*\)...../\\1/'`
-	rm feed.atom
-	echo "$newver"
+	echo ""
 }
 	
 
@@ -494,7 +490,7 @@ if ($apache_installed=="yes")
 		$apache_curversion = shell_exec( "/etc/rc.d/rc.apache vercheck" );
 	else
 		$apache_curversion = "couldn't determine the Apache Web Server version";
-	$apache_newversion = shell_exec( "cd /tmp/ && wget -q -O feed.atom --no-check-certificate $apache_cfg[INSTALLURL]/commits/$apache_cfg[BRANCH].atom && cat feed.atom | sed -n 's|tag:github.com,2008:Grit::Commit/\(.*\)|\\1|p' | sed '1q;d' | cut -d' ' -f5- | sed 's/....\(.*\)...../\\1/' && rm feed.atom" );
+	$apache_newversion = "";
 }
 ?>
 
@@ -662,8 +658,8 @@ if ($apache_installed=="yes")
 						<td style="width:auto">Install from:</td>
 						<td>
 							<select name="url" size="1" onChange="checkURL(this.form);">
-								<?=mk_option($apache_cfg['INSTALLURL'], "https://github.com/dmacias72/unRAID6.0/", "official github");?>
-								<option value='other'<?=($apache_cfg['INSTALLURL'] != "https://github.com/dmacias72/unRAID6.0/")?" selected=yes":"" ;?>>other github</option>
+								<?=mk_option($apache_cfg['INSTALLURL'], "https://github.com/dmacias72/unRAID_6.0/", "official github");?>
+								<option value='other'<?=($apache_cfg['INSTALLURL'] != "https://github.com/dmacias72/unRAID_6.0/")?" selected=yes":"" ;?>>other github</option>
 							</select>
 							<input type="hidden" name="arg8" maxlength="100" style="text-align:left;width:63%" value="<?=$apache_cfg['INSTALLURL'];?>">
 							<img src="/plugins/apache/information.png" title="Installing from other than official github site is not recommended. Use this option at your own risk!"/>
