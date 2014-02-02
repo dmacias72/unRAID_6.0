@@ -816,7 +816,7 @@ fi
 source /boot/config/plugins/apache/apache.cfg
 
 if [ -e $DOCUMENTROOT ]; then
-chmod -R 0770 $DOCUMENTROOT
+chmod -R 0777 $DOCUMENTROOT
 fi
 rm /tmp/apache-install
 ]]>
