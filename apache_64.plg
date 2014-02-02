@@ -499,7 +499,7 @@ if ($apache_installed=="yes")
 		<span class="left">Status:&#32;<img src='/plugins/apache/device_status.png'>
 			<?if ($apache_installed=="yes"):?>	
 				<?if ($apache_running=="yes"):?>
-					<a href="http://<?=$var['NAME'];?>:<?=$apache_cfg["PORT"];?>" target="_blank"><span class="green"><b>RUNNING</b></span></a><span style="font-size:12px;"> with version: <b><?=$apache_curversion?></b></span>
+					<a href="http://<?=$var['NAME'];?>:<?=$apache_cfg["PORT"];?>" target="_blank"><span class="green"><b>RUNNING</b></span></a><span style="font-size:12px;"><b><?=$apache_curversion?></b></span>
 				<?else:?>
 					<span class="red"><b>STOPPED</b></span>
 				<?endif;?>
