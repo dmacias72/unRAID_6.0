@@ -601,7 +601,7 @@ if ($apache_installed=="yes")
 						<?=mk_option($apache_cfg['RUNAS'], "root", "root");?>
 						<option value='other'<?=($apache_cfg['RUNAS'] != "root" && $apache_cfg['RUNAS'] != "nobody")?" selected=yes":"" ;?>>other</option>
 					</select>
-					<input type="hidden" name="arg2" style="width:50%" maxlength="40" value="<?=$apache_cfg['RUNAS'];?>">
+					<input type="hidden" name="arg2" style="width:55%" maxlength="40" value="<?=$apache_cfg['RUNAS'];?>">
 				</td>
 			</tr>
 			<tr>
