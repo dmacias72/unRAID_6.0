@@ -573,7 +573,7 @@ if ($apache_installed=="yes")
 		<input type="hidden" name="cmd" value="/etc/rc.d/rc.apache">
 		<table class="settings">
 			<tr>
-				<td>Enable Apache Web Server:</td>
+				<td>Enable Apache Server:</td>
 				<td>
 					<select name="arg1" size="1">
 						<?=mk_option($apache_cfg['SERVICE'], "disable", "No");?>
