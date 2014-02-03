@@ -110,7 +110,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-1.0
+1.1
 ]]>
 </INLINE>
 </FILE>
