@@ -11,25 +11,17 @@ Benni-Chan: Much of the plug-in structure from his original plug-ins. Much of th
 WW: Config page formatting, ability to select alternate branches.
 -->
 
-<FILE Name="/boot/packages/python-2.6.6-i486-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/slackware/d/python-2.6.6-i486-1.txz</URL>
-<MD5>b8de0c9f8b89aa7b3c89823d20076867</MD5>
+<FILE Name="/boot/packages/python-2.7.5-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/d/python-2.7.5-x86_64-1.txz</URL>
+<MD5>9b37a33a41b263c945fddb58949386f0</MD5>
 </FILE>
-<FILE Name="/boot/packages/zlib-1.2.5-i486-4.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/slackware/l/zlib-1.2.5-i486-4.txz</URL>
-<MD5>eabaa7087a32dfd9f6d2662163779d07</MD5>
+<FILE Name="/boot/packages/sqlite-3.7.17-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/ap/sqlite-3.7.17-x86_64-1.txz</URL>
+<MD5>730417ec4d8158c6bb5862417107b9f4</MD5>
 </FILE>
-<FILE Name="/boot/packages/sqlite-3.7.5-i486-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/slackware/ap/sqlite-3.7.5-i486-1.txz</URL>
-<MD5>6786d3764cb294ecb71cdd24e6d171d1</MD5>
-</FILE>
-<FILE Name="/boot/packages/curl-7.21.4-i486-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.osuosl.org/slackware-13.37/slackware/n/curl-7.21.4-i486-1.txz</URL>
-<MD5>e32449e0588ef54df8524827028972e8</MD5>
-</FILE>
-<FILE Name="/boot/packages/git-1.7.4.4-i486-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.osuosl.org/slackware-13.37/slackware/d/git-1.7.4.4-i486-1.txz</URL>
-<MD5>5d92bd44e67618dfdacc2e2fa9a41821</MD5>
+<FILE Name="/boot/packages/git-1.8.4-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>http://slackware.osuosl.org/slackware64-14.1/slackware64/d/git-1.8.4-x86_64-1.txz</URL>
+<MD5>e24d44ec30e7afc16c5509c4d9446140</MD5>
 </FILE>
 <FILE Name="/boot/config/plugins/htpcmanager/htpcmanager.png">
 <URL>--no-check-certificate https://github.com/downloads/Influencer/UNplugged/htpcmanager.png</URL>
@@ -42,9 +34,6 @@ WW: Config page formatting, ability to select alternate branches.
 </FILE>
 <FILE Name="/boot/config/plugins/images/information.png">
 <URL>--no-check-certificate https://github.com/downloads/Influencer/UNplugged/information.png</URL>
-</FILE>
-<FILE Name="/boot/packages/argparse-0.9.1.tgz" Run="upgradepkg --install-new">
-<URL>--no-check-certificate https://github.com/downloads/Influencer/UNplugged/argparse0.9.1.tgz</URL>
 </FILE>
 
 <!-- clean up previous install -->
@@ -76,23 +65,12 @@ INSTALLDIR="/usr/local/htpcmanager"
 RUNAS="nobody"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
-INSTALLURL="https://github.com/mbw2001/HTPC-Manager"
+INSTALLURL="https://github.com/styxit/HTPC-Manager"
 BRANCH="master"
 ]]>
 </INLINE>
 </FILE>
 
-<FILE Name="/usr/local/emhttp/plugins/webGui/unplugged.page">
-<INLINE>
-<![CDATA[
-Author="Influencer"
-Version="1.0.0"
-Title="Unplugged PLG"
-Menu="Settings"
-Type="menu"
-]]>
-</INLINE>
-</FILE>
 
 <FILE Name="/etc/rc.d/rc.htpcmanager" Mode="0770">
 <INLINE>
@@ -117,8 +95,7 @@ htpcmanager_start()
 		htpcmanager_install
 	fi
 	
-	cd $INSTALLDIR
-	CMDLINE="sudo -u $RUNAS python $INSTALLDIR/Htpc.py --debug --datadir $DATADIR --port $PORT --pid /var/run/htpcmanager/htpcmanager.pid"
+	CMDLINE="sudo -u $RUNAS python $INSTALLDIR/Htpc.py --daemon --datadir $DATADIR --port $PORT --pid /var/run/htpcmanager/htpcmanager.pid"
 	echo "Starting HTPC Manager: $CMDLINE"
 	sleep 1
 	cd $INSTALLDIR
@@ -130,13 +107,12 @@ htpcmanager_start()
 		let TIMER=$TIMER+1
 	        echo -n $TIMER
 	        if [ $TIMER -gt 10 ]; then
-        	        echo -n "sickbeard.pid not created for some reason"
+        	        echo -n "htpcmanager.pid not created for some reason"
                 	break
         	fi
 
 	done
 	echo "... OK"
-	sleep 1
 }
 
 htpcmanager_stop()
@@ -329,26 +305,26 @@ htpcmanager_datacheck()
 htpcmanager_updateplg()
 {
 	cd /boot/config/plugins
-	[ -f htpcmanager_unplugged.plg.old ] && rm -f htpcmanager_unplugged.plg.old
-	if [ -f htpcmanager_unplugged.plg ]; then
-	mv htpcmanager_unplugged.plg htpcmanager_unplugged.plg.old
+	[ -f htpcmanager_unplugged_64.old ] && rm -f htpcmanager_unplugged_64.old
+	if [ -f htpcmanager_unplugged_64 ]; then
+	mv htpcmanager_unplugged_64 htpcmanager_unplugged_64.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/htpcmanager_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/htpcmanager_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
 	fi
 }
 htpcmanager_downgradeplg()
 {
 	cd /boot/config/plugins
-	if [ -f htpcmanager_unplugged.plg.old ]; then
-	rm -f /htpcmanager_unplugged.plg
-	mv htpcmanager_unplugged.plg.old htpcmanager_unplugged.plg
+	if [ -f htpcmanager_unplugged_64.old ]; then
+	rm -f /htpcmanager_unplugged_64
+	mv htpcmanager_unplugged_64.old htpcmanager_unplugged_64
 	echo "downgrading plugin"
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged.plg
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
 	fi
 }
 htpcmanager_vercheck()
@@ -426,7 +402,7 @@ esac
 <FILE Name="/usr/local/emhttp/plugins/htpcmanager/htpcmanager.page">
 <INLINE>
 <![CDATA[
-Menu="unplugged"
+Menu="NetworkServices"
 Icon="htpcmanager.png"
 Version="0.7"
 Author="Influencer"
@@ -458,7 +434,7 @@ Title="HTPC Manager"
 <?PHP
 $htpcmanager_cfg = parse_ini_file( "/boot/config/plugins/htpcmanager/htpcmanager.cfg");
 $htpcmanager_installed = file_exists( $htpcmanager_cfg["INSTALLDIR"] . "/Htpc.py" ) ? "yes" : "no";
-$htpcmanager_rollback = file_exists( "/boot/config/plugins/htpcmanager_unplugged.plg.old" ) ? "yes" : "no";
+$htpcmanager_rollback = file_exists( "/boot/config/plugins/htpcmanager_unplugged_64.old" ) ? "yes" : "no";
 if ($htpcmanager_installed=="yes")
 {	
 	$htpcmanager_running = file_exists( "/var/run/htpcmanager/htpcmanager.pid") ? "yes" : "no";
@@ -506,7 +482,7 @@ if ($htpcmanager_installed=="yes")
 				</div>
 			<?else:?>
 				<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
-					<form name="htpcmanager_buttonstart" method="POST" action="/update.htm" target="progressFrame">
+					<form name="htpcmanager_start" method="POST" action="/update.htm" target="progressFrame">
 						<input type="hidden" name="cmd" value="/etc/rc.d/rc.htpcmanager buttonstart">
 						<input type="submit" name="runCmd" value="Start">
 					</form>
@@ -522,8 +498,8 @@ if ($htpcmanager_installed=="yes")
 		<?endif;?>
 	<? if ($htpcmanager_rollback=="yes"): ?>
 	<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
-			<form name="htpcmanager_update1" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/etc/rc.d/rc.htpcmanager updateplg">
+			<form name="apache_update1" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.apache updateplg">
 					<input type="submit" name="runCmd" value="Update PLG">
 			</form>
 	</div>
@@ -535,8 +511,8 @@ if ($htpcmanager_installed=="yes")
 	</div>
 	<?else:?>
 	<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
-			<form name="htpcmanager_update" method="POST" action="/update.htm" target="progressFrame">
-				<input type="hidden" name="cmd" value="/etc/rc.d/rc.htpcmanager updateplg">			
+			<form name="apache_update" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/etc/rc.d/rc.apache updateplg">			
 				<input type="submit" name="runCmd" value="Update PLG">
 			</form>
 		</div>
@@ -640,8 +616,8 @@ if ($htpcmanager_installed=="yes")
 						<td style="width:auto">Install from:</td>
 						<td>
 							<select name="url" size="1" onChange="checkURL(this.form);">
-								<?=mk_option($htpcmanager_cfg['INSTALLURL'], "https://github.com/mbw2001/HTPC-Manager", "official github");?>
-								<option value='other'<?=($htpcmanager_cfg['INSTALLURL'] != "https://github.com/mbw2001/HTPC-Manager")?" selected=yes":"" ;?>>other github</option>
+								<?=mk_option($htpcmanager_cfg['INSTALLURL'], "https://github.com/styxit/HTPC-Manager", "official github");?>
+								<option value='other'<?=($htpcmanager_cfg['INSTALLURL'] != "https://github.com/styxit/HTPC-Manager")?" selected=yes":"" ;?>>other github</option>
 							</select>
 							<input type="hidden" name="arg8" maxlength="100" style="text-align:left;width:63%" value="<?=$htpcmanager_cfg['INSTALLURL'];?>">
 							<img src="/plugins/htpcmanager/information.png" title="Installing from other than official github site is not recommended. Use this option at your own risk!"/>
@@ -666,20 +642,6 @@ if ($htpcmanager_installed=="yes")
 </div>
 
 <script type="text/javascript">
-function checkUSER(form)
-{
-	if (form.runas.selectedIndex < 2 )
-	{
-		form.arg2.value = form.runas.options[form.runas.selectedIndex].value;
-		form.arg2.type = "hidden";
-	}
-	else
-	{
-		form.arg2.value = "<?=$htpcmanager_cfg['RUNAS'];?>";
-		form.arg2.type = "text";
-	}
-}
-
 function checkRUNNING(form)
 {
 	if ("<?=$htpcmanager_running;?>" == "yes")
