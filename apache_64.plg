@@ -121,13 +121,12 @@ rm /tmp/apache-cleanup
 <![CDATA[
 # Apache Web Server configuration:
 SERVICE="disable"
-DOCUMENTROOT=""
-HTTPDCONF=""
+DOCUMENTROOT="/srv/httpd/htdocs"
+HTTPDCONF="/etc/httpd/httpd.conf"
+PORT="80"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
-INSTALLURL=""
-BRANCH="master"
 ]]>
 </INLINE>
 </FILE>
@@ -220,8 +219,6 @@ write_config()
 	echo "RUNAS=\"$RUNAS\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PLG_STORAGESIZE=\"$PLG_STORAGESIZE\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PLG_DATACHECK=\"$PLG_DATACHECK\"" >> /boot/config/plugins/apache/apache.cfg
-	echo "INSTALLURL=\"$INSTALLURL\"" >> /boot/config/plugins/apache/apache.cfg
-	echo "BRANCH=\"$BRANCH\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PORT=\"$PORT\"" >> /boot/config/plugins/apache/apache.cfg
 }
 
@@ -247,8 +244,6 @@ apache_change_settings()
 	
 	PLG_STORAGESIZE="$5"
 	PLG_DATACHECK="$6"
-	INSTALLURL="$7"
-	BRANCH="$8"
 	
 }
 
@@ -257,11 +252,11 @@ apache_enable()
 	# if not already enabled, enable it
 		SERVICE=enable
 		if [ $PORT != $2 ];then
-		apache_change_settings $1 $2 $3 $4 $5 $6 $7 $8
+		apache_change_settings $1 $2 $3 $4 $5 $6
 		write_config
         apache_restart
 		else
-		apache_change_settings $1 $2 $3 $4 $5 $6 $7 $8
+		apache_change_settings $1 $2 $3 $4 $5 $6 
 		write_config
 		fi
 	# enabling also starts it
@@ -274,7 +269,7 @@ apache_disable()
 {
 	apache_stop
 	SERVICE=disable
-	apache_change_settings $1 $2 $3 $4 $5 $6 $7 $8
+	apache_change_settings $1 $2 $3 $4 $5 $6
 	write_config
 }
 
@@ -402,10 +397,10 @@ case "$1" in
 		apache_restart
 	;;
 	'enable')
-		apache_enable $2 $3 $4 $5 $6 $7 $8 $9
+		apache_enable $2 $3 $4 $5 $6 $7
 	;;
 	'disable')
-		apache_disable $2 $3 $4 $5 $6 $7 $8 $9
+		apache_disable $2 $3 $4 $5 $6 $7
 	;;
 	'install')
 		apache_install
@@ -561,7 +556,6 @@ if ($apache_installed=="yes")
 	<?endif;?><br/>
 	<? if ($apache_installed=="yes"): ?>	
 		<center><hr size="3" width="50%" color="grey"></center>
-		<p style="margin-left:10px;">Installed from <?=$apache_cfg[BRANCH]?> branch of <?=$apache_cfg[INSTALLURL]?> site</p>
 		<? if ($apache_cfg[PLG_STORAGESIZE]=="yes"): ?>
 			<?=$apache_datasize?>
 		<? endif; ?>
@@ -569,16 +563,6 @@ if ($apache_installed=="yes")
 			<?=$apache_datacheck?>
 		<? endif; ?>
 		<p style="margin-left:10px;"><b>Plug-in Version: <?=$apache_plgver;?></b></p>
-		<? if (strcmp($apache_curversion, $apache_newversion)!=0 && $apache_curversion!="couldn't determine the Apache Web Server version"): ?>
-			<center>
-				<form name="apache_settings" method="POST" action="/update.htm" target="progressFrame">
-					<input type="hidden" name="cmd" value="/etc/rc.d/rc.apache update">
-					<p style="color:blue;margin-left:10px;">Update available to version: <b><?=$apache_newversion;?></b></p>
-					<hr size="3" width="50%" color="grey" style="margin-bottom:15px">
-					<input type="submit" name="runCmd" value="Update">
-				</form>	 
-			</center>
-		<? endif; ?>
 	<? endif; ?>
 </div>
 <div style="width: 49%; float:right">
@@ -620,7 +604,6 @@ if ($apache_installed=="yes")
 					<input type="hidden" name="arg2" style="width:66%" maxlength="40" value="<?=$apache_cfg['RUNAS'];?>">
 				</td>
 			</tr>
-			<tr><td>---</td></tr>
 			<tr>
 				<td>Show storage memory usage:</td>
 				<td>
@@ -650,35 +633,6 @@ if ($apache_installed=="yes")
 			<? endif; ?>
 			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
 		</div>
-		<div>
-			<div style="display: none;">
-				<br />
-				<table class="settings">
-					<tr>
-						<td style="width:auto">Install from:</td>
-						<td>
-							<select name="url" size="1" onChange="checkURL(this.form);">
-								<?=mk_option($apache_cfg['INSTALLURL'], "https://github.com/dmacias72/unRAID_6.0/", "official github");?>
-								<option value='other'<?=($apache_cfg['INSTALLURL'] != "https://github.com/dmacias72/unRAID_6.0/")?" selected=yes":"" ;?>>other github</option>
-							</select>
-							<input type="hidden" name="arg8" maxlength="100" style="text-align:left;width:63%" value="<?=$apache_cfg['INSTALLURL'];?>">
-							<img src="/plugins/apache/information.png" title="Installing from other than official github site is not recommended. Use this option at your own risk!"/>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:auto">Specify branch:</td>
-						<td>
-							<select name="branch" size="1" onChange="checkBRANCH(this.form);">
-								<?=mk_option($apache_cfg['BRANCH'], "master", "master");?>
-								<option value='other'<?=($apache_cfg['BRANCH'] != "master")?" selected=yes":"" ;?>>other</option>
-							</select>
-							<input type="hidden" name="arg9" maxlength="40" style="text-align:left;width:71%" value="<?=$apache_cfg['BRANCH'];?>">
-							<img src="/plugins/apache/information.png" title="Installing other branch than master is not recommended. Use this option at your own risk!"/>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
 	</form>
 	<br />
 </div>
@@ -694,14 +648,10 @@ function checkRUNNING(form)
 		form.arg5.readOnly = true;
 		form.arg6.readOnly = true;
 		form.arg7.readOnly = true;
-		form.arg8.readOnly = true;
-		form.arg9.readOnly = true;
 		form.runas.disabled = true;
 		form.use_data.disabled = true;
 		form.storagesize.disabled = true;
 		form.datacheck.disabled = true;
-		form.url.disabled = true;
-		form.branch.disabled = true;
    } 
    else
    {
@@ -711,14 +661,10 @@ function checkRUNNING(form)
 		form.arg5.readOnly = (form.arg1.value == "enable");
 		form.arg6.readOnly = (form.arg1.value == "enable");
 		form.arg7.readOnly = (form.arg1.value == "enable");
-		form.arg8.readOnly = (form.arg1.value == "enable");
-		form.arg9.readOnly = (form.arg1.value == "enable");
 		form.runas.disabled = (form.arg1.value == "enable");
 		form.use_data.disabled = (form.arg1.value == "enable");
 		form.storagesize.disabled = (form.arg1.value == "enable");
 		form.datacheck.disabled = (form.arg1.value == "enable");
-		form.url.disabled = (form.arg1.value == "enable");
-		form.branch.disabled = (form.arg1.value == "enable");
    }
 }
  
@@ -747,40 +693,10 @@ function checkDATA(form)
 	form.arg7.value = form.datacheck.options[form.datacheck.selectedIndex].value;
 }
 
-function checkURL(form)
-{
-	if (form.url.selectedIndex < 1 )
-	{
-		form.arg8.value = form.url.options[form.url.selectedIndex].value;
-		form.arg8.type = "hidden";
-	}
-	else
-	{
-		form.arg8.value = "<?=$apache_cfg['INSTALLURL'];?>";
-		form.arg8.type = "text";
-	}
-}
-
-function checkBRANCH(form)
-{
-	if (form.branch.selectedIndex < 1 )
-	{
-		form.arg9.value = form.branch.options[form.branch.selectedIndex].value;
-		form.arg9.type = "hidden";
-	}
-	else
-	{
-		form.arg9.value = "<?=$apache_cfg['BRANCH'];?>";
-		form.arg9.type = "text";
-	}
-}
-
 checkUSER(document.apache_settings);
 checkDATADIR(document.apache_settings);
 checkSTORAGE(document.apache_settings);
 checkDATA(document.apache_settings);
-checkURL(document.apache_settings);
-checkBRANCH(document.apache_settings);
 </script>
 ]]>
 </INLINE>
