@@ -305,26 +305,26 @@ htpcmanager_datacheck()
 htpcmanager_updateplg()
 {
 	cd /boot/config/plugins
-	[ -f htpcmanager_unplugged_64.old ] && rm -f htpcmanager_unplugged_64.old
-	if [ -f htpcmanager_unplugged_64 ]; then
-	mv htpcmanager_unplugged_64 htpcmanager_unplugged_64.old
+	[ -f htpcmanager_unplugged_64.plg.old ] && rm -f htpcmanager_unplugged_64.plg.old
+	if [ -f htpcmanager_unplugged_64.plg ]; then
+	mv htpcmanager_unplugged_64.plg htpcmanager_unplugged_64.plg.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64.plg
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/htpcmanager_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64.plg
 	fi
 }
 htpcmanager_downgradeplg()
 {
 	cd /boot/config/plugins
-	if [ -f htpcmanager_unplugged_64.old ]; then
-	rm -f /htpcmanager_unplugged_64
-	mv htpcmanager_unplugged_64.old htpcmanager_unplugged_64
+	if [ -f htpcmanager_unplugged_64.plg.old ]; then
+	rm -f /htpcmanager_unplugged_64.plg
+	mv htpcmanager_unplugged_64.plg.old htpcmanager_unplugged_64.plg
 	echo "downgrading plugin"
-	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64
+	/usr/local/sbin/installplg /boot/config/plugins/htpcmanager_unplugged_64.plg
 	fi
 }
 htpcmanager_vercheck()
@@ -434,7 +434,7 @@ Title="HTPC Manager"
 <?PHP
 $htpcmanager_cfg = parse_ini_file( "/boot/config/plugins/htpcmanager/htpcmanager.cfg");
 $htpcmanager_installed = file_exists( $htpcmanager_cfg["INSTALLDIR"] . "/Htpc.py" ) ? "yes" : "no";
-$htpcmanager_rollback = file_exists( "/boot/config/plugins/htpcmanager_unplugged_64.old" ) ? "yes" : "no";
+$htpcmanager_rollback = file_exists( "/boot/config/plugins/htpcmanager_unplugged_64.plg.old" ) ? "yes" : "no";
 if ($htpcmanager_installed=="yes")
 {	
 	$htpcmanager_running = file_exists( "/var/run/htpcmanager/htpcmanager.pid") ? "yes" : "no";
