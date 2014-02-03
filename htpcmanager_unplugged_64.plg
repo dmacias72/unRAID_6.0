@@ -578,7 +578,6 @@ if ($htpcmanager_installed=="yes")
 					<input type="hidden" name="arg2" style="width:66%" maxlength="40" value="<?=$htpcmanager_cfg['RUNAS'];?>">
 				</td>
 			</tr>
-			<tr><td>---</td></tr>
 			<tr>
 				<td>Show storage memory usage:</td>
 				<td>
