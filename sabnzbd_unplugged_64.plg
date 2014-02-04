@@ -105,17 +105,6 @@ port = 8081
 </INLINE>
 </FILE>
 
-<FILE Name="/usr/local/emhttp/plugins/webGui/unplugged.page">
-<INLINE>
-<![CDATA[
-Author="Influencer"
-Version="1.0.0"
-Title="Unplugged PLG"
-Menu="Settings"
-Type="menu"
-]]>
-</INLINE>
-</FILE>
 
 <FILE Name="/etc/rc.d/rc.sabnzbd" Mode="0770">
 <INLINE>
@@ -386,26 +375,26 @@ sabnzbd_datacheck()
 sabnzbd_updateplg()
 {
 	cd /boot/config/plugins
-	[ -f sabnzbd_unplugged.plg.old ] && rm -f sabnzbd_unplugged.plg.old
-	if [ -f sabnzbd_unplugged.plg ]; then
-	mv sabnzbd_unplugged.plg sabnzbd_unplugged.plg.old
+	[ -f sabnzbd_unplugged_64.plg.old ] && rm -f sabnzbd_unplugged_64.plg.old
+	if [ -f sabnzbd_unplugged_64.plg ]; then
+	mv sabnzbd_unplugged_64.plg sabnzbd_unplugged_64.plg.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/sabnzbd_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/sabnzbd_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged_64.plg
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/Influencer/UNplugged/raw/master/sabnzbd_unplugged.plg
-	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged.plg
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/sabnzbd_unplugged_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged_64.plg
 	fi
 }
 sabnzbd_downgradeplg()
 {
 	cd /boot/config/plugins
-	if [ -f sabnzbd_unplugged.plg.old ]; then
-	rm -f /sabnzbd_unplugged.plg
-	mv sabnzbd_unplugged.plg.old sabnzbd_unplugged.plg
+	if [ -f sabnzbd_unplugged_64.plg.old ]; then
+	rm -f /sabnzbd_unplugged_64.plg
+	mv sabnzbd_unplugged_64.plg.old sabnzbd_unplugged_64.plg
 	echo "downgrading plugin"
-	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged.plg
+	/usr/local/sbin/installplg /boot/config/plugins/sabnzbd_unplugged_64.plg
 	fi
 }
 sabnzbd_newver()
@@ -490,7 +479,7 @@ esac
 <FILE Name="/usr/local/emhttp/plugins/sabnzbd/sabnzbd.page">
 <INLINE>
 <![CDATA[
-Menu="unplugged"
+Menu="NetworkServices"
 Icon="sabnzbd.png"
 Version="0.8"
 Author="Benjamin Waller; Influencer; Wojciech Walaszek"
@@ -522,7 +511,7 @@ Title="SABnzbd"
 <?PHP
 $sabnzbd_cfg = parse_ini_file( "/boot/config/plugins/sabnzbd/sabnzbd.cfg" );
 $sabnzbd_installed = file_exists( $sabnzbd_cfg["INSTALLDIR"] . "/SABnzbd.py" ) ? "yes" : "no";
-$sabnzbd_rollback = file_exists( "boot/config/plugins/sabnzbd_unplugged.plg.old" ) ? "yes" : "no";
+$sabnzbd_rollback = file_exists( "boot/config/plugins/sabnzbd_unplugged_64.plg.old" ) ? "yes" : "no";
 $sabnzbd_plgver = shell_exec ( "cat /boot/config/plugins/sabnzbd/plgver.txt" );
 $sabnzbd_configfile = $sabnzbd_cfg["DATADIR"] . "/sabnzbd.ini";
 if (file_exists("$sabnzbd_configfile"))
@@ -597,9 +586,10 @@ if ($sabnzbd_installed=="yes")
 	<?endif;?>
 	<? if ($sabnzbd_rollback=="yes"): ?>
 	<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
-			
-
-
+			<form name="sabnzbd_update1" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.sabnzbd updateplg">
+					<input type="submit" name="runCmd" value="Update PLG">
+			</form>
 	</div>
 	<div style="position:relative;float:left;width:50%;text-align:left;margin-bottom:24px">
 		<form name="sabnzbd_downgrade" method="POST" action="/update.htm" target="progressFrame">
@@ -609,9 +599,10 @@ if ($sabnzbd_installed=="yes")
 	</div>
 	<?else:?>
 	<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
-			
-
-
+			<form name="sabnzbd_update" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/etc/rc.d/rc.sabnzbd updateplg">			
+				<input type="submit" name="runCmd" value="Update PLG">
+			</form>
 		</div>
 	<?endif;?><br/>
 	<? if ($sabnzbd_installed=="yes"): ?>	
@@ -683,7 +674,6 @@ if ($sabnzbd_installed=="yes")
 					<input type="hidden" name="arg2" style="width:66%" maxlength="40" value="<?=$sabnzbd_cfg['RUNAS'];?>">
 				</td>
 			</tr>
-			<tr><td>---</td></tr>
 			<tr>
 				<td>Show storage memory usage:</td>
 				<td>
