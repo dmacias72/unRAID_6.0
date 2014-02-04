@@ -14,10 +14,6 @@ WW: Install & Data Directory size, some config page formatting.
 I have probably missed some credits here, not intentional but I do not have a perfect memory!
 -->
 
-<FILE Name="/boot/packages/python-2.7.5-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/d/python-2.7.5-x86_64-1.txz</URL>
-<MD5>9b37a33a41b263c945fddb58949386f0</MD5>
-</FILE>
 <FILE Name="/boot/packages/python-cheetah-2.4.4-x86_64-1alien.tgz" Run="upgradepkg --install-new">
 <URL>http://www.slackware.com/~alien/sbrepos/14.1/x86_64/python-cheetah/python-cheetah-2.4.4-x86_64-1alien.tgz</URL>
 <MD5>f2e4ab251fe05c3c5e03bb5ed20b3b7a</MD5>
