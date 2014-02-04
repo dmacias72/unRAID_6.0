@@ -58,7 +58,7 @@ rm /tmp/sickbeard-cleanup
 <FILE Name="/boot/config/plugins/sickbeard/plgver.txt">
 <INLINE>
 <![CDATA[
-2.4
+2.5.5
 ]]>
 </INLINE>
 </FILE>
@@ -515,17 +515,19 @@ if ($sickbeard_installed=="yes")
 			<form name="sickbeard_install" method="POST" action="/update.htm" target="progressFrame">
 				<input type="hidden" name="cmd" value="/etc/rc.d/rc.sickbeard install">			
 				<input type="submit" name="runCmd" value="Install">
-			
-
-
+			<form name="sickbeard_update1" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.sickbeard updateplg">
+					<input type="submit" name="runCmd" value="Update PLG">
+			</form>
 	</div>
 	<div style="position:relative;float:left;width:50%;text-align:left;margin-bottom:24px">
 		<form name="sickbeard_downgrade" method="POST" action="/update.htm" target="progressFrame">
 					<input type="hidden" name="cmd" value="/etc/rc.d/rc.sickbeard downgradeplg">
 					<input type="submit" name="runCmd" value="Downgrade PLG">
-			
-
-
+			<form name="sickbeard_update" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/etc/rc.d/rc.sickbeard updateplg">			
+				<input type="submit" name="runCmd" value="Update PLG">
+			</form>
 		</div>
 	<?endif;?><br/>
 	<? if ($sickbeard_installed=="yes"): ?>	
