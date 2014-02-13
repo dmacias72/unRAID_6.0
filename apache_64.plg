@@ -121,7 +121,7 @@ rm /tmp/apache-cleanup
 <![CDATA[
 # Apache Web Server configuration:
 SERVICE="disable"
-DOCUMENTROOT="/srv/httpd/htdocs"
+DOCROOT="/srv/httpd/htdocs"
 HTTPDCONF="/etc/httpd/httpd.conf"
 PORT="80"
 RUNAS="root"
@@ -214,7 +214,7 @@ write_config()
 {
 	echo "#Apache Web Server configuration:" > /boot/config/plugins/apache/apache.cfg
 	echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/apache/apache.cfg
-	echo "DOCUMENTROOT=\"$DOCUMENTROOT\"" >> /boot/config/plugins/apache/apache.cfg
+	echo "DOCROOT=\"$DOCROOT\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "HTTPDCONF=\"$HTTPDCONF\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "RUNAS=\"$RUNAS\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PLG_STORAGESIZE=\"$PLG_STORAGESIZE\"" >> /boot/config/plugins/apache/apache.cfg
@@ -225,11 +225,11 @@ write_config()
 apache_change_settings()
 {
 	PORT="$2"
-	DOCUMENTROOT="$3"
+	DOCROOT="$3"
 	HTTPDCONF="$4"
 	
-	if [ $DOCUMENTROOT == "" ]; then
-		$DOCUMENTROOT="/srv/httpd/htdocs"
+	if [ $DOCROOT == "" ]; then
+		$DOCROOT="/srv/httpd/htdocs"
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
@@ -237,7 +237,7 @@ apache_change_settings()
 	fi
 	
 	if [ $RUNAS != $1 ]; then
-		chown -R $1:users "$DOCUMENTROOT"
+		chown -R $1:users "$DOCROOT"
 	fi
 	
 	RUNAS="$1"
@@ -277,19 +277,19 @@ apache_install()
 {
 	echo "Installing latest version of Apache Web Server..."
 	
-	if [ $DOCUMENTROOT == "" ]; then
-		$DOCUMENTROOT="/srv/httpd/htdocs"
+	if [ $DOCROOT == "" ]; then
+		$DOCROOT="/srv/httpd/htdocs"
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
 		$HTTPDCONF="/etc/http/httpd.conf"
 	fi
 
-	if [ ! -e "$DOCUMENTROOT" ]; then 
-		mkdir -p $DOCUMENTROOT
+	if [ ! -e "$DOCROOT" ]; then 
+		mkdir -p $DOCROOT
 	fi
 	
-	chown -R $RUNAS:users "$DOCUMENTROOT" 
+	chown -R $RUNAS:users "$DOCROOT" 
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -328,7 +328,7 @@ apache_storagesize()
 apache_datacheck() 
 {
 	array=( ramfs proc tempfs sysfs )
-	fs=$( stat -f -c '%T' $DOCUMENTROOT )
+	fs=$( stat -f -c '%T' $DOCROOT )
 	for i in "${array[@]}"
 	do
 		if [ $i = $fs ]; then
@@ -476,7 +476,7 @@ if ($apache_installed=="yes")
 {	
 	$apache_running = file_exists( "/var/run/httpd.pid") ? "yes" : "no";
 	if ($apache_cfg[PLG_STORAGESIZE]=="yes")
-		$apache_datasize = shell_exec ( "/etc/rc.d/rc.apache storagesize $apache_cfg[DOCUMENTROOT]" );
+		$apache_datasize = shell_exec ( "/etc/rc.d/rc.apache storagesize $apache_cfg[DOCROOT]" );
 	if ($apache_cfg[PLG_DATACHECK]=="yes")
 		$apache_datacheck = shell_exec ( "/etc/rc.d/rc.apache datacheck" );
 	$apache_plgver = shell_exec ( "cat /boot/config/plugins/apache/plgver.txt" );
@@ -583,7 +583,7 @@ if ($apache_installed=="yes")
 			</tr>
 			<tr>
 				<td>Document Root directory:</td>
-				<td><input type="text" name="arg4" maxlength="60" value="<?=$apache_cfg['DOCUMENTROOT'];?>"></td>
+				<td><input type="text" name="arg4" maxlength="60" value="<?=$apache_cfg['DOCROOT'];?>"></td>
 			</tr>
 			<tr>
 				<td>Server Config File:</td>
@@ -745,8 +745,17 @@ fi
 # include our config vars
 source /boot/config/plugins/apache/apache.cfg
 
-if [ -e $DOCUMENTROOT ]; then
-chmod -R 0775 $DOCUMENTROOT
+cd /tmp/
+
+if [ ! -e /usr/lib64/httpd/modules/libphp5.so ]; then
+tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/httpd/modules/libphp5.so --strip=4
+mv /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
+chmod -R 0755 /usr/lib64/httpd/modules/libphp5.so
+fi
+
+if [ ! -e $DOCROOT ]; then
+mkdir -p $DOCROOT
+chmod -R 0775 $DOCROOT
 fi
 rm /tmp/apache-install
 ]]>
