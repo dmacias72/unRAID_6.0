@@ -233,7 +233,7 @@ apache_change_settings()
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/etc/http/httpd.conf"
+		$HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 	fi
 	
 	if [ $RUNAS != $1 ]; then
@@ -282,7 +282,7 @@ apache_install()
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/etc/http/httpd.conf"
+		$HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 	fi
 
 	if [ ! -e "$DOCROOT" ]; then 
@@ -663,7 +663,6 @@ function checkRUNNING(form)
 		form.arg6.readOnly = true;
 		form.arg7.readOnly = true;
 		form.runas.disabled = true;
-		form.use_data.disabled = true;
 		form.storagesize.disabled = true;
 		form.datacheck.disabled = true;
    } 
@@ -676,26 +675,11 @@ function checkRUNNING(form)
 		form.arg6.readOnly = (form.arg1.value == "enable");
 		form.arg7.readOnly = (form.arg1.value == "enable");
 		form.runas.disabled = (form.arg1.value == "enable");
-		form.use_data.disabled = (form.arg1.value == "enable");
 		form.storagesize.disabled = (form.arg1.value == "enable");
 		form.datacheck.disabled = (form.arg1.value == "enable");
    }
 }
  
-
-function checkDATADIR(form)
-{
-	if (form.use_data.checked == false )
-	{
-		form.arg5.value = form.arg4.value;
-		form.arg5.type = "hidden";
-	}
-	else
-	{
-		form.arg5.value = "<?=$apache_datadir;?>";
-		form.arg5.type = "text";
-	}
-}
 
 function checkSTORAGE(form)
 {
@@ -708,7 +692,6 @@ function checkDATA(form)
 }
 
 checkUSER(document.apache_settings);
-checkDATADIR(document.apache_settings);
 checkSTORAGE(document.apache_settings);
 checkDATA(document.apache_settings);
 </script>
