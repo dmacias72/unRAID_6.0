@@ -122,7 +122,7 @@ rm /tmp/apache-cleanup
 # Apache Web Server configuration:
 SERVICE="disable"
 DOCROOT="/srv/httpd/htdocs"
-HTTPDCONF="/etc/httpd/httpd.conf"
+HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 PORT="80"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
