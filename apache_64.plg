@@ -737,7 +737,7 @@ chmod -R 0755 /usr/lib64/httpd/modules/libphp5.so
 fi
 
 if [ ! -e $DOCROOT ]; then
-mkdir -p $DOCROOT
+mkdir $DOCROOT
 chmod -R 0775 $DOCROOT
 fi
 rm /tmp/apache-install
