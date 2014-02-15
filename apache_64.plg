@@ -148,7 +148,9 @@ apache_start()
 	if [ -r /var/run/httpd.pid ]; then
 		return
 	fi
- 	
+
+ 	chmod -R 0775 $DOCROOT
+
 	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
 	echo "Starting Apache Web Server: $CMDLINE"
 	sleep 1
@@ -290,6 +292,7 @@ apache_install()
 	fi
 	
 	chown -R $RUNAS:users "$DOCROOT" 
+	chmod -R 0775 $DOCROOT	
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -738,8 +741,10 @@ fi
 
 if [ ! -e $DOCROOT ]; then
 mkdir $DOCROOT
-chmod -R 0775 $DOCROOT
 fi
+
+chmod -R 0775 $DOCROOT
+
 rm /tmp/apache-install
 ]]>
 </INLINE>
