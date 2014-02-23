@@ -94,6 +94,10 @@ rm -f /tmp/plugin-prepare
 <MD5>90ebfe2eb0c4e18604695d0b97205564</MD5>
 </FILE>
 
+<FILE Name="/boot/config/plugins/apache/apache.png">
+<URL>--no-check-certificate https://db.tt/9JrzrKMF</URL>
+</FILE>
+
 <!-- clean up previous install -->
 <FILE Name="/tmp/apache-cleanup" Run="/bin/bash">
 <INLINE>
@@ -738,12 +742,6 @@ tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/httpd/modules/lib
 mv /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
 chmod -R 0755 /usr/lib64/httpd/modules/libphp5.so
 fi
-
-if [ ! -e $DOCROOT ]; then
-mkdir $DOCROOT
-fi
-
-chmod -R 0775 $DOCROOT
 
 rm /tmp/apache-install
 ]]>
