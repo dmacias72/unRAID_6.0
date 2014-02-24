@@ -737,10 +737,14 @@ source /boot/config/plugins/apache/apache.cfg
 
 cd /tmp/
 
-if [ ! -e /usr/lib64/httpd/modules/libphp5.so ]; then
 tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/httpd/modules/libphp5.so --strip=4
-mv /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
-chmod -R 0755 /usr/lib64/httpd/modules/libphp5.so
+mv -f /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
+tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --strip=3
+cp -rf extensions/ /usr/lib64/php/
+rm -rf extensions/
+
+if [ ! -e /boot/config/plugins/apache/http.conf ]; then
+cp /etc/httpd/httpd.conf /boot/config/plugins/apache
 fi
 
 rm /tmp/apache-install
