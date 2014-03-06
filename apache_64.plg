@@ -743,7 +743,7 @@ tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --
 cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
 
-if [ ! -e /boot/config/plugins/apache/http.conf ]; then
+if [ ! -e /boot/config/plugins/apache/httpd.conf ]; then
 cp /etc/httpd/httpd.conf /boot/config/plugins/apache
 fi
 
