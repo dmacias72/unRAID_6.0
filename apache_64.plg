@@ -98,6 +98,11 @@ rm -f /tmp/plugin-prepare
 <URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/apache.png</URL>
 </FILE>
 
+<FILE Name="/boot/config/plugins/apache/httpd.conf">
+<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/httpd.conf</URL>
+</FILE>
+
+
 <!-- clean up previous install -->
 <FILE Name="/tmp/apache-cleanup" Run="/bin/bash">
 <INLINE>
@@ -744,10 +749,6 @@ mv -f /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
 tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --strip=3
 cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
-
-if [ ! -e /boot/config/plugins/apache/httpd.conf ]; then
-cp /etc/httpd/httpd.conf /boot/config/plugins/apache
-fi
 
 rm /tmp/apache-install
 ]]>
