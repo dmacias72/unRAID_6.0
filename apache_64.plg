@@ -110,6 +110,14 @@ rm -f /tmp/plugin-prepare
 <URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
+<FILE Name="/boot/config/plugins/apache/httpd/mime.types">
+<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/mime.types</URL>
+</FILE>
+
+<FILE Name="/boot/config/plugins/apache/httpd/magic">
+<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/magic</URL>
+</FILE>
+
 
 <!-- clean up previous install -->
 <FILE Name="/tmp/apache-cleanup" Run="/bin/bash">
