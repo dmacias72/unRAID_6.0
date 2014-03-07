@@ -95,11 +95,11 @@ rm -f /tmp/plugin-prepare
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
-<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/apache.png</URL>
+<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/blob/master/apache.png</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd.conf">
-<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/httpd.conf</URL>
+<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/blob/master/httpd.conf</URL>
 </FILE>
 
 
