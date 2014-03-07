@@ -98,8 +98,16 @@ rm -f /tmp/plugin-prepare
 <URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
 </FILE>
 
-<FILE Name="/boot/config/plugins/apache/httpd.conf">
+<FILE Name="/boot/config/plugins/apache/httpd/httpd.conf">
 <URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd.conf</URL>
+</FILE>
+
+<FILE Name="/boot/config/plugins/apache/httpd/php.ini">
+<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/php.ini</URL>
+</FILE>
+
+<FILE Name="/boot/config/plugins/apache/httpd/mod_php.conf">
+<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
 
@@ -119,7 +127,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-1.1
+2.0
 ]]>
 </INLINE>
 </FILE>
@@ -131,8 +139,8 @@ rm /tmp/apache-cleanup
 # Apache Web Server configuration:
 SERVICE="disable"
 DOCROOT="/srv/httpd/htdocs"
-HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
-PORT="80"
+HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
+PORT="8080"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
@@ -246,7 +254,7 @@ apache_change_settings()
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
+		$HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
 	fi
 	
 	if [ $RUNAS != $1 ]; then
@@ -295,7 +303,7 @@ apache_install()
 	fi
 
 	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
+		$HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
 	fi
 
 	if [ ! -e "$DOCROOT" ]; then 
@@ -749,7 +757,8 @@ mv -f /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
 tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --strip=3
 cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
-
+rm -R /etc/httpd
+ln -s /boot/config/plugins/apache/httpd /etc/httpd
 rm /tmp/apache-install
 ]]>
 </INLINE>
