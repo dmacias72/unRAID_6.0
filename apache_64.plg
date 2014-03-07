@@ -365,11 +365,11 @@ apache_updateplg()
 	if [ -f apache_64.plg ]; then
 	mv apache_64.plg apache_64.plg.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/apache_64.plg
+	wget -q --no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/apache_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/apache_64.plg
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/apache_64.plg
+	wget -q --no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/apache_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/apache_64.plg
 	fi
 }
