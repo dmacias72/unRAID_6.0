@@ -140,7 +140,7 @@ rm /tmp/apache-cleanup
 SERVICE="disable"
 DOCROOT="/srv/httpd/htdocs"
 HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
-PORT="8080"
+PORT="8088"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
