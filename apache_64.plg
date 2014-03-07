@@ -153,12 +153,14 @@ apache_start()
 		return
 	fi
 
- 	chmod -R 0775 $DOCROOT
+ 	chmod -R 0775 $DOCROOT	
+	ln -sfT $DOCROOT /srv/httpd
+	ln -sfT $DOCROOT /srv/www
 
 	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
-	echo "Starting Apache Web Server: $CMDLINE"
+	echo "Starting Apache Web Server: $CMDLINE -c \"Listen $PORT\""
 	sleep 1
-	nohup $CMDLINE > /dev/null 2>&1 &
+	nohup $CMDLINE -c "Listen $PORT" > /dev/null 2>&1 &
 
 	TIMER=0
 	while [ ! -e /var/run/httpd.pid ]; do
