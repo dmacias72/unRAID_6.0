@@ -95,7 +95,7 @@ rm -f /tmp/plugin-prepare
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
-<URL>--no-check-certificate https://db.tt/9JrzrKMF</URL>
+<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/apache.png</URL>
 </FILE>
 
 <!-- clean up previous install -->
