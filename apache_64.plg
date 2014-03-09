@@ -667,6 +667,27 @@ if ($apache_installed=="yes")
 	<br />
 </div>
 
+      </table>
+ 
+ 
+    <div id="title"><span class="left">Log Files</span></div>  
+    <table class="share_status wide">
+    <tr>
+         <td>Filename</td>
+         <td>Size</td>
+         </tr>
+    <?php
+foreach (glob("/var/log/httpd/*log") as $log) {
+         echo "<tr>
+         <td><a id=\"openlog\" rel=\"shadowbox;height=600;width=800;\" title=\"".$log."\" href=\"/update.htm?cmd=/usr/bin/tail%20-n%201000%20-f%20".$log."&forkCmd=Start\">".$log."</a></td>
+         <td>".filesize($log)."</td>
+         </tr>";
+}
+?>
+
+  
+  </table>
+
 <script type="text/javascript">
 function checkUSER(form)
 {
