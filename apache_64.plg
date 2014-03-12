@@ -95,27 +95,27 @@ rm -f /tmp/plugin-prepare
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd/httpd.conf">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd/httpd.conf</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/httpd.conf</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd/php.ini">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd/php.ini</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/php.ini</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd/mod_php.conf">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mod_php.conf</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mod_php.conf</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd/mime.types">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mime.types</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mime.types</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd/magic">
-<URL>--no-check-certificate http://raw.github.com/dmacias72/unRAID_6.0/master/httpd/magic</URL>
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/magic</URL>
 </FILE>
 
 
