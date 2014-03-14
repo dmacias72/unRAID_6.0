@@ -629,7 +629,7 @@ if ($deluge_installed=="yes")
          <td>Size</td>
          </tr>
     <?php
-foreach (glob("$DATADIR/*log") as $log) {
+foreach (glob("$DATADIR/*.log") as $log) {
          echo "<tr>
          <td><a id=\"openlog\" rel=\"shadowbox;height=600;width=800;\" title=\"".$log."\" href=\"/update.htm?cmd=/usr/bin/tail%20-n%201000%20-f%20".$log."&forkCmd=Start\">".$log."</a></td>
          <td>".filesize($log)."</td>
