@@ -110,9 +110,8 @@ rm /tmp/deluge-cleanup
 <![CDATA[
 # Deluge configuration:
 SERVICE="disable"
-DOCROOT="/srv/httpd/htdocs"
-HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
-PORT="8088"
+DATADIR="/mnt/cache/.apps/deluge"
+PORT="8112"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
@@ -138,7 +137,7 @@ deluge_start()
 		return
 	fi
 
- 	chmod -R 0775 $DOCROOT	
+ 	chmod -R 0775 $DATADIR	
 
 	CMDLINE="sudo -u $RUNAS deluge"
 	echo "Starting Deluge BitTorrent Client: $CMDLINE"
@@ -168,7 +167,7 @@ deluge_stop()
 
 	echo "Stopping Deluge BitTorrent Client..."
 	sleep 1
-	apachectl -k stop -f $HTTPDCONF
+	killall deluge
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -205,8 +204,7 @@ write_config()
 {
 	echo "#Deluge BitTorrent Client configuration:" > /boot/config/plugins/deluge/deluge.cfg
 	echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/deluge/deluge.cfg
-	echo "DOCROOT=\"$DOCROOT\"" >> /boot/config/plugins/deluge/deluge.cfg
-	echo "HTTPDCONF=\"$HTTPDCONF\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "DATADIR=\"$DATADIR\"" >> /boot/config/plugins/deluge/deluge.cfg
 	echo "RUNAS=\"$RUNAS\"" >> /boot/config/plugins/deluge/deluge.cfg
 	echo "PLG_STORAGESIZE=\"$PLG_STORAGESIZE\"" >> /boot/config/plugins/deluge/deluge.cfg
 	echo "PLG_DATACHECK=\"$PLG_DATACHECK\"" >> /boot/config/plugins/deluge/deluge.cfg
@@ -216,25 +214,20 @@ write_config()
 deluge_change_settings()
 {
 	PORT="$2"
-	DOCROOT="$3"
-	HTTPDCONF="$4"
+	DATADIR="$3"
 	
-	if [ $DOCROOT == "" ]; then
-		$DOCROOT="/srv/httpd/htdocs"
+	if [ $DATADIR == "" ]; then
+		$DATADIR="/mnt/cache/.apps/deluge"
 	fi
 
-	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
-	fi
-	
 	if [ $RUNAS != $1 ]; then
-		chown -R $1:users "$DOCROOT"
+		chown -R $1:users "$DATADIR"
 	fi
 	
 	RUNAS="$1"
 	
-	PLG_STORAGESIZE="$5"
-	PLG_DATACHECK="$6"
+	PLG_STORAGESIZE="$4"
+	PLG_DATACHECK="$5"
 	
 }
 
@@ -243,11 +236,11 @@ deluge_enable()
 	# if not already enabled, enable it
 		SERVICE=enable
 		if [ $PORT != $2 ];then
-		deluge_change_settings $1 $2 $3 $4 $5 $6
+		deluge_change_settings $1 $2 $3 $4 $5 
 		write_config
         deluge_restart
 		else
-		deluge_change_settings $1 $2 $3 $4 $5 $6 
+		deluge_change_settings $1 $2 $3 $4 $5 
 		write_config
 		fi
 	# enabling also starts it
@@ -260,7 +253,7 @@ deluge_disable()
 {
 	deluge_stop
 	SERVICE=disable
-	deluge_change_settings $1 $2 $3 $4 $5 $6
+	deluge_change_settings $1 $2 $3 $4 $5
 	write_config
 }
 
@@ -268,20 +261,16 @@ deluge_install()
 {
 	echo "Installing latest version of Deluge BitTorrent Client..."
 	
-	if [ $DOCROOT == "" ]; then
-		$DOCROOT="/srv/httpd/htdocs"
+	if [ $DATADIR == "" ]; then
+		$DATADIR="/mnt/cache/.apps/deluge"
 	fi
 
-	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
-	fi
-
-	if [ ! -e "$DOCROOT" ]; then 
-		mkdir -p $DOCROOT
+	if [ ! -e "$DATADIR" ]; then 
+		mkdir -p $DATADIR
 	fi
 	
-	chown -R $RUNAS:users "$DOCROOT" 
-	chmod -R 0775 $DOCROOT	
+	chown -R $RUNAS:users "$DATADIR" 
+	chmod -R 0775 $DATADIR	
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -320,7 +309,7 @@ deluge_storagesize()
 deluge_datacheck() 
 {
 	array=( ramfs proc tempfs sysfs )
-	fs=$( stat -f -c '%T' $DOCROOT )
+	fs=$( stat -f -c '%T' $DATADIR )
 	for i in "${array[@]}"
 	do
 		if [ $i = $fs ]; then
@@ -468,12 +457,12 @@ if ($deluge_installed=="yes")
 {	
 	$deluge_running = file_exists( "/var/run/deluged.pid") ? "yes" : "no";
 	if ($deluge_cfg[PLG_STORAGESIZE]=="yes")
-		$deluge_datasize = shell_exec ( "/etc/rc.d/rc.deluged storagesize $deluge_cfg[DOCROOT]" );
+		$deluge_datasize = shell_exec ( "/etc/rc.d/rc.deluged storagesize $deluge_cfg[DATADIR]" );
 	if ($deluge_cfg[PLG_DATACHECK]=="yes")
 		$deluge_datacheck = shell_exec ( "/etc/rc.d/rc.deluged datacheck" );
 	$deluge_plgver = shell_exec ( "cat /boot/config/plugins/deluge/plgver.txt" );
 
-	if (file_exists("$deluge_cfg[HTTPDCONF]"))
+	if (file_exists("$deluge_cfg[DATADIR]"))
 		$deluge_curversion = shell_exec( "/etc/rc.d/rc.deluged vercheck" );
 	else
 		$deluge_curversion = "couldn't determine the Deluge BitTorrent Client version";
@@ -574,12 +563,8 @@ if ($deluge_installed=="yes")
 				</td>
 			</tr>
 			<tr>
-				<td>Document Root directory:</td>
-				<td><input type="text" name="arg4" maxlength="60" value="<?=$deluge_cfg['DOCROOT'];?>"></td>
-			</tr>
-			<tr>
-				<td>Server Config File:</td>
-				<td><input type="text" name="arg5" maxlength="60" value="<?=$deluge_cfg['HTTPDCONF'];?>"></td>
+				<td>Data Directory:</td>
+				<td><input type="text" name="arg4" maxlength="60" value="<?=$deluge_cfg['DATADIR'];?>"></td>
 			</tr>
 			<tr>
 				<td>Port:</td>
@@ -639,7 +624,7 @@ if ($deluge_installed=="yes")
          <td>Size</td>
          </tr>
     <?php
-foreach (glob("/var/log/httpd/*log") as $log) {
+foreach (glob("$DATADIR/.config/deluge/*log") as $log) {
          echo "<tr>
          <td><a id=\"openlog\" rel=\"shadowbox;height=600;width=800;\" title=\"".$log."\" href=\"/update.htm?cmd=/usr/bin/tail%20-n%201000%20-f%20".$log."&forkCmd=Start\">".$log."</a></td>
          <td>".filesize($log)."</td>
