@@ -73,10 +73,6 @@ rm -f /tmp/plugin-prepare
 <URL>http://ponce.cc/slackware/slackware64-14.1/packages/zope.interface-4.0.5-x86_64-1ponce.txz</URL>
 <MD5>4732518bff71c54e1b83468dbd97f63a</MD5>
 </FILE>
-<FILE Name="/boot/packages/notify-python-0.1.1-x86_64-3.txz" Run="upgradepkg --install-new">
-<URL>ftp://slackware.cs.utah.edu/slackware//slackware64-14.1/slackware64/l/notify-python-0.1.1-x86_64-3.txz</URL>
-<MD5>ee7f72760b99c662fb570aa76d722ffb</MD5>
-</FILE>
 
 <FILE Name="/boot/config/plugins/deluge/deluge.png">
 <URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/deluge.png</URL>
@@ -99,7 +95,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-2.0
+1.0
 ]]>
 </INLINE>
 </FILE>
@@ -137,10 +133,15 @@ deluge_start()
 		return
 	fi
 
- 	chmod -R 0775 $DATADIR	
+	# if directory doesn't exist or sickbeard is not found, install it
+	if [ "$DATADIR" != "" ]; then
+		deluge_install
+	fi
+
 
 	CMDLINE="sudo -u $RUNAS /usr/bin/deluged --config=$DATADIR --logfile=$DATADIR/deluged.log  --pidfile=/var/run/deluged/deluged.pid"
-	echo "Starting Deluge BitTorrent Client: $CMDLINE"
+
+	echo "Starting Deluge BitTorrent Daemon: $CMDLINE"
 	sleep 1
 	nohup $CMDLINE  > /dev/null 2>&1 &
 
@@ -154,7 +155,14 @@ deluge_start()
                 	break
         	fi
 	done
-	nohup /usr/bin/deluge --ui=web --config=$DATADIR > /dev/null 2>&1 &	
+	echo "... OK"
+	sleep 1
+
+	CMDLINE2="sudo -u $RUNAS /usr/bin/deluge-web --config=$DATADIR --port=$PORT --fork"	
+
+	echo "Starting Deluge BitTorrent Web Client: $CMDLINE2"	
+	sleep 1
+	nohup $CMDLINE2  > /dev/null 2>&1 &
 	echo "... OK"
 }
 
@@ -167,8 +175,8 @@ deluge_stop()
 
 	echo "Stopping Deluge BitTorrent Client..."
 	sleep 1
-	kill $(cat /var/run/sickbeard/sickbeard.pid)
-	killall deluge
+	kill $(cat /var/run/deluged/deluged.pid)
+	killall -u $RUNAS deluge-web &>/dev/null
 	sleep 3
 
 	if [ -e /var/run/deluged/deluged.pid ]; then
@@ -192,7 +200,7 @@ echo "Enabling Deluge"
 	if [ -f $CONFIG ]; then
 		sed -i "s/"disable"/"enable/"" $CONFIG	
 		sleep 3
-		echo "Starting Deluge"
+		echo "Starting Deluge BitTorrent Client"
 	deluge_start
 	fi
 }
@@ -355,7 +363,7 @@ deluge_downgradeplg()
 deluge_vercheck()
 {
 	set -x
-	curversion=$(deluge -v)
+	curversion=$(/usr/bin/deluged -v)
 	echo "$curversion"
 }
 deluge_newver()
@@ -556,7 +564,7 @@ if ($deluge_installed=="yes")
 		<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged">
 		<table class="settings">
 			<tr>
-				<td>Enable Deluge BitTorrent Client:</td>
+				<td>Enable Deluge:</td>
 				<td>
 					<select name="arg1" size="1">
 						<?=mk_option($deluge_cfg['SERVICE'], "disable", "No");?>
