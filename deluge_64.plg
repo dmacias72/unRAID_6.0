@@ -41,7 +41,7 @@ rm -f /tmp/plugin-prepare
 <URL>http://ponce.cc/slackware/slackware64-14.1/packages/GeoIP-1.5.1-x86_64-1ponce.txz</URL>
 <MD5>14962e47ea7b0228867e2315d57e4da3</MD5>
 </FILE>
-<FILE Name="/boot/packages/libtorrent-rasterbar-0.16.3-x86_64-1ponce.txz">
+<FILE Name="/boot/packages/libtorrent-rasterbar-0.16.3-x86_64-1ponce.txz" Run="upgradepkg --install-new">
 <URL>http://ponce.cc/slackware/slackware64-14.1/packages/libtorrent-rasterbar-0.16.3-x86_64-1ponce.txz</URL>
 <MD5>cd6796d4593a1b6176c49f1b84a5ce41</MD5>
 </FILE>
@@ -629,7 +629,7 @@ if ($deluge_installed=="yes")
          <td>Size</td>
          </tr>
     <?php
-foreach (glob("$DATADIR/*.log") as $log) {
+foreach (glob("$deluge_cfg[DATADIR]/*.log") as $log) {
          echo "<tr>
          <td><a id=\"openlog\" rel=\"shadowbox;height=600;width=800;\" title=\"".$log."\" href=\"/update.htm?cmd=/usr/bin/tail%20-n%201000%20-f%20".$log."&forkCmd=Start\">".$log."</a></td>
          <td>".filesize($log)."</td>
