@@ -1,0 +1,760 @@
+<?xml version='1.0' standalone='yes'?>
+<PLUGIN>
+
+<!--
+This Plugin installs and controls Deluge BitTorrent Client for unRaid 6.0 ONLY. All dependencies are installed as needed and everything is controlable from the webgui.
+
+Credits:
+Infuencer
+Benni-Chan: Much of the plug-in structure from his original plug-ins. Much of that code is still in place.
+-->
+
+<FILE Name="/tmp/plugin-prepare" Run="/bin/bash">
+<INLINE>
+# Wait until network is ready
+timer=30
+while [ $timer -gt 0 ]; do
+  gateway=$(route -n | awk '/^0.0.0.0/ {print $2}')
+  if [ -n "$gateway" ] &amp;&amp; [ $(ping -q -n -c 1 $gateway | awk -F, '/received/ {print $2}' | awk '{print $1}') -eq 1 ]; then
+    break
+  fi
+  timer=$((timer-1))
+  sleep 1
+done
+if [ $timer -eq 0 ]; then
+  echo "No network communication !!!"
+fi
+# Remove this script
+rm -f /tmp/plugin-prepare
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/packages/boost-1.54.0-x86_64-3.txz" Run="upgradepkg --install-new">
+<URL>ftp://slackware.cs.utah.edu/slackware//slackware64-14.1/slackware64/l/boost-1.54.0-x86_64-3.txz</URL>
+<MD5>99637904293e4e3096ce104db9bfd530</MD5>
+</FILE>
+<FILE Name="/boot/packages/deluge-1.3.6-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/deluge-1.3.6-x86_64-1ponce.txz</URL>
+<MD5>4103ccc203605a50a76356edc08b0d93</MD5>
+</FILE>
+<FILE Name="/boot/packages/GeoIP-1.5.1-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/GeoIP-1.5.1-x86_64-1ponce.txz</URL>
+<MD5>14962e47ea7b0228867e2315d57e4da3</MD5>
+</FILE>
+<FILE Name="/boot/packages/libtorrent-rasterbar-0.16.3-x86_64-1ponce.txz">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/libtorrent-rasterbar-0.16.3-x86_64-1ponce.txz</URL>
+<MD5>cd6796d4593a1b6176c49f1b84a5ce41</MD5>
+</FILE>
+<FILE Name="/boot/packages/Mako-0.9.0-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/Mako-0.9.0-x86_64-1ponce.txz</URL>
+<MD5>4d157f4ce24494571ee352cffdd6f4f8</MD5>
+</FILE>
+<FILE Name="/boot/packages/pyOpenSSL-0.13.1-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/pyOpenSSL-0.13.1-x86_64-1ponce.txz</URL>
+<MD5>4352debfbed4212a3241d91b428fa47f</MD5>
+</FILE>
+<FILE Name="/boot/packages/pysetuptools-2.0.1-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/pysetuptools-2.0.1-x86_64-1ponce.txz</URL>
+<MD5>5f9c76a7815a87844e94b9d275be9a8e</MD5>
+</FILE>
+<FILE Name="/boot/packages/python2-chardet-2.1.1-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/python2-chardet-2.1.1-x86_64-1ponce.txz</URL>
+<MD5>e2c003b9e1d294339b58fbf1ebd5c335</MD5>
+</FILE>
+<FILE Name="/boot/packages/python-twisted-13.2.0-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/python-twisted-13.2.0-x86_64-1ponce.txz</URL>
+<MD5>1c1ea530e5d0173a845d0abd0777221d</MD5>
+</FILE>
+<FILE Name="/boot/packages/pyxdg-0.25-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/pyxdg-0.25-x86_64-1ponce.txz</URL>
+<MD5>2c42b794ffd5256780202b73f10a071f</MD5>
+</FILE>
+<FILE Name="/boot/packages/zope.interface-4.0.5-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/zope.interface-4.0.5-x86_64-1ponce.txz</URL>
+<MD5>4732518bff71c54e1b83468dbd97f63a</MD5>
+</FILE>
+<FILE Name="/boot/packages/notify-python-0.1.1-x86_64-3.txz" Run="upgradepkg --install-new">
+<URL>ftp://slackware.cs.utah.edu/slackware//slackware64-14.1/slackware64/l/notify-python-0.1.1-x86_64-3.txz</URL>
+<MD5>ee7f72760b99c662fb570aa76d722ffb</MD5>
+</FILE>
+
+<FILE Name="/boot/config/plugins/deluge/deluge.png">
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/deluge.png</URL>
+</FILE>
+
+
+<!-- clean up previous install -->
+<FILE Name="/tmp/deluge-cleanup" Run="/bin/bash">
+<INLINE>
+<![CDATA[
+[ -d /usr/local/emhttp/plugins/deluge ] && rm -f -R /usr/local/emhttp/plugins/deluge
+[ -f /etc/rc.d/rc.deluged ] && rm -f /etc/rc.d/rc.deluged
+[ -f /boot/config/plugins/deluge/plgver.txt ] && rm -f /boot/config/plugins/deluge/plgver.txt
+rm /tmp/deluge-cleanup
+]]>
+</INLINE>
+</FILE>
+
+<!-- plugin version file -->
+<FILE Name="/boot/config/plugins/deluge/plgver.txt">
+<INLINE>
+<![CDATA[
+2.0
+]]>
+</INLINE>
+</FILE>
+
+<!-- configuration file -->
+<FILE Name="/boot/config/plugins/deluge/deluge.cfg">
+<INLINE>
+<![CDATA[
+# Deluge configuration:
+SERVICE="disable"
+DOCROOT="/srv/httpd/htdocs"
+HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
+PORT="8088"
+RUNAS="root"
+PLG_STORAGESIZE="yes"
+PLG_DATACHECK="yes"
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/etc/rc.d/rc.deluged" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/sh
+# start|stop|restart|enable|disable|install|update|storagesize|datacheck deluge
+
+deluge_start()
+{ 
+	# no-op if not enabled
+	if [ $SERVICE != "enable" ]; then
+		sed -i "s/"disable"/"enable/"" $CONFIG	
+	fi
+  
+	# no-op if already running
+	if [ -r /var/run/deluged.pid ]; then
+		return
+	fi
+
+ 	chmod -R 0775 $DOCROOT	
+
+	CMDLINE="sudo -u $RUNAS deluge"
+	echo "Starting Deluge BitTorrent Client: $CMDLINE"
+	sleep 1
+	nohup $CMDLINE  > /dev/null 2>&1 &
+
+	TIMER=0
+	while [ ! -e /var/run/deluged.pid ]; do
+		sleep 1
+		let TIMER=$TIMER+1
+	        echo -n $TIMER
+	        if [ $TIMER -gt 10 ]; then
+        	        echo -n "deluged.pid not created for some reason"
+                	break
+        	fi
+
+	done
+	echo "... OK"
+}
+
+deluge_stop()
+{
+	# no-op if not running
+	if [ ! -r /var/run/deluged.pid ]; then
+		return
+	fi
+
+	echo "Stopping Deluge BitTorrent Client..."
+	sleep 1
+	apachectl -k stop -f $HTTPDCONF
+	sleep 3
+	echo "... OK"
+	sleep 1
+}
+
+deluge_restart()
+{
+	deluge_stop
+	sleep 1
+	deluge_start
+}
+deluge_buttonstart()
+{
+echo "Enabling Deluge"
+	CONFIG="/boot/config/plugins/deluge/deluge.cfg"
+	if [ -f $CONFIG ]; then
+		sed -i "s/"disable"/"enable/"" $CONFIG	
+		sleep 3
+		echo "Starting Deluge"
+	deluge_start
+	fi
+}
+
+deluge_update()
+{
+	deluge_stop
+	sleep 1
+	deluge_install
+	sleep 1
+	deluge_start
+}
+
+write_config()
+{
+	echo "#Deluge BitTorrent Client configuration:" > /boot/config/plugins/deluge/deluge.cfg
+	echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "DOCROOT=\"$DOCROOT\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "HTTPDCONF=\"$HTTPDCONF\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "RUNAS=\"$RUNAS\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "PLG_STORAGESIZE=\"$PLG_STORAGESIZE\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "PLG_DATACHECK=\"$PLG_DATACHECK\"" >> /boot/config/plugins/deluge/deluge.cfg
+	echo "PORT=\"$PORT\"" >> /boot/config/plugins/deluge/deluge.cfg
+}
+
+deluge_change_settings()
+{
+	PORT="$2"
+	DOCROOT="$3"
+	HTTPDCONF="$4"
+	
+	if [ $DOCROOT == "" ]; then
+		$DOCROOT="/srv/httpd/htdocs"
+	fi
+
+	if [ $HTTPDCONF == "" ]; then
+		$HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
+	fi
+	
+	if [ $RUNAS != $1 ]; then
+		chown -R $1:users "$DOCROOT"
+	fi
+	
+	RUNAS="$1"
+	
+	PLG_STORAGESIZE="$5"
+	PLG_DATACHECK="$6"
+	
+}
+
+deluge_enable()
+{
+	# if not already enabled, enable it
+		SERVICE=enable
+		if [ $PORT != $2 ];then
+		deluge_change_settings $1 $2 $3 $4 $5 $6
+		write_config
+        deluge_restart
+		else
+		deluge_change_settings $1 $2 $3 $4 $5 $6 
+		write_config
+		fi
+	# enabling also starts it
+	if [ ! -f /var/run/deluged.pid ]; then
+	deluge_start
+	fi
+}
+
+deluge_disable()
+{
+	deluge_stop
+	SERVICE=disable
+	deluge_change_settings $1 $2 $3 $4 $5 $6
+	write_config
+}
+
+deluge_install()
+{
+	echo "Installing latest version of Deluge BitTorrent Client..."
+	
+	if [ $DOCROOT == "" ]; then
+		$DOCROOT="/srv/httpd/htdocs"
+	fi
+
+	if [ $HTTPDCONF == "" ]; then
+		$HTTPDCONF="/boot/config/plugins/deluge/httpd/httpd.conf"
+	fi
+
+	if [ ! -e "$DOCROOT" ]; then 
+		mkdir -p $DOCROOT
+	fi
+	
+	chown -R $RUNAS:users "$DOCROOT" 
+	chmod -R 0775 $DOCROOT	
+	sleep 3
+	echo "... OK"
+	sleep 1
+}
+
+deluge_storagesize() 
+{
+	if [ $1 ] && [ $2 ]; then
+		if [ -d $1 ]; then
+			INST=`du -sh $1 | cut -f1`
+		elif [ -f $1 ]; then
+			INST=`ls -lah $1 | awk '{ print $5}'`
+		fi
+	
+		if [ -d $2 ]; then
+			DAT=`du -sh $2 | cut -f1`
+		elif [ -f $2 ]; then
+			DAT=`ls -lah $2 | awk '{ print $5}'`
+		fi
+		
+		if [ $1 == $2 ]; then
+			echo "<p style="margin-left:10px\;">Storage memory usage: install + data directory: <b>$INST</b></p>"
+		else
+			echo "<p style="margin-left:10px\;">Storage memory usage: install directory: <b>$INST</b>, data directory: <b>$DAT</b></p>"
+		fi
+	elif [ $1 ]; then
+		if [ -d $1 ]; then
+			INST=`du -sh $1 | cut -f1`
+		elif [ -f $1 ]; then
+			INST=`ls -lah $1 | awk '{ print $5}'`
+		fi
+		echo "<p style="margin-left:10px\;">Storage memory usage: <b>$INST</b></p>"
+	fi
+}
+
+deluge_datacheck() 
+{
+	array=( ramfs proc tempfs sysfs )
+	fs=$( stat -f -c '%T' $DOCROOT )
+	for i in "${array[@]}"
+	do
+		if [ $i = $fs ]; then
+		    echo "<p style="color:red\;margin-left:10px\;margin-right:10px\;"><b>WARNING:</b> Your data directory is not persistent and WILL NOT survive a reboot. Please locate Data Directory on disk for persistency</p>"
+			break
+		elif [ $i = msdos ]; then
+			echo "<p style="color:red\;margin-left:10px\;margin-right:10px\;"><b>WARNING:</b> Your data directory is located on your flash drive. This will decrease your flash drives life span!</p>"
+			break
+		else
+			echo "<p style="color:green\;margin-left:10px\;margin-right:10px\;">Your data will persist after a reboot</p>"
+			break
+		fi
+	done
+}
+
+deluge_updateplg()
+{
+	cd /boot/config/plugins
+	[ -f deluge_64.plg.old ] && rm -f deluge_64.plg.old
+	if [ -f deluge_64.plg ]; then
+	mv deluge_64.plg deluge_64.plg.old
+	echo "Updating plugin"
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/deluge_64.plg
+	else
+	echo "Updating plugin"
+	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
+	/usr/local/sbin/installplg /boot/config/plugins/deluge_64.plg
+	fi
+}
+deluge_downgradeplg()
+{
+	cd /boot/config/plugins
+	if [ -f deluge_64.plg.old ]; then
+	rm -f /deluge_64.plg
+	mv deluge_64.plg.old deluge_64.plg
+	echo "downgrading plugin"
+	/usr/local/sbin/installplg /boot/config/plugins/deluge_64.plg
+	fi
+}
+deluge_vercheck()
+{
+	set -x
+	curversion=$(deluge -v)
+	echo "$curversion"
+}
+deluge_newver()
+{
+	set -x
+	source /boot/config/plugins/deluge/deluge.cfg
+	echo ""
+}
+	
+
+# read our configuration
+source /boot/config/plugins/deluge/deluge.cfg
+
+case "$1" in
+	'start')
+		deluge_start
+	;;
+	'stop')
+		deluge_stop
+	;;
+	'restart')
+		deluge_restart
+	;;
+	'enable')
+		deluge_enable $2 $3 $4 $5 $6 $7
+	;;
+	'disable')
+		deluge_disable $2 $3 $4 $5 $6 $7
+	;;
+	'install')
+		deluge_install
+	;;
+	'update')
+		deluge_update
+	;;
+	'storagesize')
+		deluge_storagesize $2 $3
+	;;
+	'datacheck')
+		deluge_datacheck
+	;;
+	'updateplg')
+		deluge_updateplg
+	;;
+	'downgradeplg')
+		deluge_downgradeplg
+	;;
+	'buttonstart')
+		deluge_buttonstart
+	;;
+	'vercheck')
+		deluge_vercheck
+	;;
+	'newvercheck')
+		deluge_newver
+	;;
+	*)
+		echo "usage $0 start|stop|restart|enable|disable|install|update|storagesize|datacheck|updateplg|downgradeplg"
+esac
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/deluge.page">
+<INLINE>
+<![CDATA[
+Menu="NetworkServices"
+Icon="deluge.png"
+Version="1.0"
+Author="dmacias"
+Type="php"
+Title="Deluge"
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/deluge.png">
+<LOCAL>/boot/config/plugins/deluge/deluge.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/device_status.png">
+<LOCAL>/boot/config/plugins/images/device_status.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/new_config.png">
+<LOCAL>/boot/config/plugins/images/new_config.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/information.png">
+<LOCAL>/boot/config/plugins/images/information.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/deluge/deluge.php">
+<INLINE>
+<![CDATA[
+<?PHP
+$deluge_cfg = parse_ini_file( "/boot/config/plugins/deluge/deluge.cfg");
+$deluge_installed = "yes";
+$deluge_rollback = file_exists( "/boot/config/plugins/deluge_64.plg.old" ) ? "yes" : "no";
+if ($deluge_installed=="yes")
+{	
+	$deluge_running = file_exists( "/var/run/deluged.pid") ? "yes" : "no";
+	if ($deluge_cfg[PLG_STORAGESIZE]=="yes")
+		$deluge_datasize = shell_exec ( "/etc/rc.d/rc.deluged storagesize $deluge_cfg[DOCROOT]" );
+	if ($deluge_cfg[PLG_DATACHECK]=="yes")
+		$deluge_datacheck = shell_exec ( "/etc/rc.d/rc.deluged datacheck" );
+	$deluge_plgver = shell_exec ( "cat /boot/config/plugins/deluge/plgver.txt" );
+
+	if (file_exists("$deluge_cfg[HTTPDCONF]"))
+		$deluge_curversion = shell_exec( "/etc/rc.d/rc.deluged vercheck" );
+	else
+		$deluge_curversion = "couldn't determine the Deluge BitTorrent Client version";
+	$deluge_newversion = "";
+}
+?>
+
+<div style="width: 49%; float:left">
+	<div id="title">
+		<span class="left">Status:&#32;<img src='/plugins/deluge/device_status.png'>
+			<?if ($deluge_installed=="yes"):?>	
+				<?if ($deluge_running=="yes"):?>
+					<a href="http://<?=$var['NAME'];?>:<?=$deluge_cfg["PORT"];?>" target="_blank"><span class="green"><b>RUNNING</b></span></a><span style="font-size:12px;"><b><?=$deluge_curversion?></b></span>
+				<?else:?>
+					<span class="red"><b>STOPPED</b></span>
+				<?endif;?>
+			<?else:?>
+				<span class="red"><b>NOT INSTALLED</b></span>
+			<?endif;?>	
+		</span>
+	</div>	
+		<?if ($deluge_installed=="yes"):?>
+			<?if ($deluge_running=="yes"):?>	
+				<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
+					<form name="deluge_stop" method="POST" action="/update.htm" target="progressFrame">
+						<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged stop">
+						<input type="submit" name="runCmd" value="Stop">
+					</form>
+				</div>
+				<div style="position:relative;float:left;width:50%;text-align:left;margin-bottom:24px">
+					<form name="deluge_restart" method="POST" action="/update.htm" target="progressFrame">
+						<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged restart">
+						<input type="submit" name="runCmd" value="Restart">
+					</form>
+				</div>
+			<?else:?>
+				<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
+					<form name="deluge_start" method="POST" action="/update.htm" target="progressFrame">
+						<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged buttonstart">
+						<input type="submit" name="runCmd" value="Start">
+					</form>
+				</div>
+			<?endif;?>
+		<?else:?>
+		<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
+			<form name="deluge_install" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged install">			
+				<input type="submit" name="runCmd" value="Install">
+			</form>
+		</div>
+		<?endif;?>
+	<? if ($deluge_rollback=="yes"): ?>
+	<div style="position:relative;float:left;width:50%;text-align:right;margin-bottom:24px">
+			<form name="deluge_update1" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged updateplg">
+					<input type="submit" name="runCmd" value="Update PLG">
+			</form>
+	</div>
+	<div style="position:relative;float:left;width:50%;text-align:left;margin-bottom:24px">
+		<form name="deluge_downgrade" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged downgradeplg">
+					<input type="submit" name="runCmd" value="Downgrade PLG">
+			</form>
+	</div>
+	<?else:?>
+	<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
+		<form name="deluge_update" method="POST" action="/update.htm" target="progressFrame">
+				<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged updateplg">			
+				<input type="submit" name="runCmd" value="Update PLG">
+			</form>
+		</div>
+	<?endif;?><br/>
+	<? if ($deluge_installed=="yes"): ?>	
+		<center><hr size="3" width="50%" color="grey"></center>
+		<? if ($deluge_cfg[PLG_STORAGESIZE]=="yes"): ?>
+			<?=$deluge_datasize?>
+		<? endif; ?>
+		<? if ($deluge_cfg[PLG_DATACHECK]=="yes"): ?>
+			<?=$deluge_datacheck?>
+		<? endif; ?>
+		<p style="margin-left:10px;"><b>Plug-in Version: <?=$deluge_plgver;?></b></p>
+	<? endif; ?>
+</div>
+<div style="width: 49%; float:right">
+	<div id="title">
+		<span class="left">Configuration:&#32;<img src='/plugins/deluge/new_config.png'></span>
+	</div>
+	<form name="deluge_settings" method="POST" action="/update.htm" target="progressFrame">
+		<input type="hidden" name="cmd" value="/etc/rc.d/rc.deluged">
+		<table class="settings">
+			<tr>
+				<td>Enable Deluge BitTorrent Client:</td>
+				<td>
+					<select name="arg1" size="1">
+						<?=mk_option($deluge_cfg['SERVICE'], "disable", "No");?>
+						<?=mk_option($deluge_cfg['SERVICE'], "enable", "Yes");?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Document Root directory:</td>
+				<td><input type="text" name="arg4" maxlength="60" value="<?=$deluge_cfg['DOCROOT'];?>"></td>
+			</tr>
+			<tr>
+				<td>Server Config File:</td>
+				<td><input type="text" name="arg5" maxlength="60" value="<?=$deluge_cfg['HTTPDCONF'];?>"></td>
+			</tr>
+			<tr>
+				<td>Port:</td>
+				<td><input type="text" name="arg3" maxlength="40" value="<?=$deluge_cfg["PORT"];?>"></td>
+			</tr>
+			<tr>
+				<td>Run as user:</td>
+				<td>
+					<select name="runas" size="1" onChange="checkUSER(this.form);">
+						<?=mk_option($deluge_cfg['RUNAS'], "nobody", "nobody");?>
+						<?=mk_option($deluge_cfg['RUNAS'], "root", "root");?>
+						<option value='other'<?=($deluge_cfg['RUNAS'] != "root" && $deluge_cfg['RUNAS'] != "nobody")?" selected=yes":"" ;?>>other</option>
+					</select>
+					<input type="hidden" name="arg2" style="width:50%" maxlength="55" value="<?=$deluge_cfg['RUNAS'];?>">
+				</td>
+			</tr>
+			<tr>
+				<td>Show storage memory usage:</td>
+				<td>
+					<select name="storagesize" size="1" onChange="checkSTORAGE(this.form);">
+						<?=mk_option($deluge_cfg['PLG_STORAGESIZE'], "yes", "Yes");?>
+						<?=mk_option($deluge_cfg['PLG_STORAGESIZE'], "no", "No");?>
+					</select>
+					<input type="hidden" name="arg6" value="<?=$deluge_cfg['PLG_STORAGESIZE'];?>">
+				</td>
+			</tr>
+			<tr>
+				<td>Show data persistency information:</td>
+				<td>
+					<select name="datacheck" size="1" onChange="checkDATA(this.form);">
+						<?=mk_option($deluge_cfg['PLG_DATACHECK'], "yes", "Yes");?>
+						<?=mk_option($deluge_cfg['PLG_DATACHECK'], "no", "No");?>
+					</select>
+					<input type="hidden" name="arg7" value="<?=$deluge_cfg['PLG_DATACHECK'];?>">
+				</td>
+			</tr>
+		</table>
+		<div align="center">
+			<hr size="3" align="center" width="75%" color="grey" style="margin-top:20px;margin-bottom:18px" >
+			<input type="submit" name="runCmd" value="Apply" style="margin-bottom:8px">
+			<? if ($deluge_installed=="no"): ?>
+				<input type="button" value="Show advanced configuration" style="margin-bottom:35px" onClick="if (this.parentNode.parentNode.getElementsByTagName('div')[1].getElementsByTagName('div')[0].style.display != '') { this.parentNode.parentNode.getElementsByTagName('div')[1].getElementsByTagName('div')[0].style.display = ''; this.innerText = ''; this.value = 'Hide advanced configuration'; } else { this.parentNode.parentNode.getElementsByTagName('div')[1].getElementsByTagName('div')[0].style.display = 'none'; this.innerText = ''; this.value = 'Show advanced configuration'; }">
+			<? endif; ?>
+			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
+		</div>
+	</form>
+	<br />
+</div>
+
+      </table>
+ 
+ 
+    <div id="title"><span class="left">Log Files</span></div>  
+    <table class="share_status wide">
+    <tr>
+         <td>Filename</td>
+         <td>Size</td>
+         </tr>
+    <?php
+foreach (glob("/var/log/httpd/*log") as $log) {
+         echo "<tr>
+         <td><a id=\"openlog\" rel=\"shadowbox;height=600;width=800;\" title=\"".$log."\" href=\"/update.htm?cmd=/usr/bin/tail%20-n%201000%20-f%20".$log."&forkCmd=Start\">".$log."</a></td>
+         <td>".filesize($log)."</td>
+         </tr>";
+}
+?>
+
+  
+  </table>
+
+<script type="text/javascript">
+function checkUSER(form)
+{
+	if (form.runas.selectedIndex < 2 )
+	{
+		form.arg2.value = form.runas.options[form.runas.selectedIndex].value;
+		form.arg2.type = "hidden";
+	}
+	else
+	{
+		form.arg2.value = "<?=$deluge_cfg['RUNAS'];?>";
+		form.arg2.type = "text";
+	}
+}
+
+function checkRUNNING(form)
+{
+	if ("<?=$deluge_running;?>" == "yes")
+	{
+		form.arg2.readOnly = true;
+		form.arg3.readOnly = true;
+		form.arg4.readOnly = true;
+		form.arg5.readOnly = true;
+		form.arg6.readOnly = true;
+		form.arg7.readOnly = true;
+		form.runas.disabled = true;
+		form.storagesize.disabled = true;
+		form.datacheck.disabled = true;
+   } 
+   else
+   {
+		form.arg2.readOnly = (form.arg1.value == "enable");
+		form.arg3.readOnly = (form.arg1.value == "enable");
+		form.arg4.readOnly = (form.arg1.value == "enable");
+		form.arg5.readOnly = (form.arg1.value == "enable");
+		form.arg6.readOnly = (form.arg1.value == "enable");
+		form.arg7.readOnly = (form.arg1.value == "enable");
+		form.runas.disabled = (form.arg1.value == "enable");
+		form.storagesize.disabled = (form.arg1.value == "enable");
+		form.datacheck.disabled = (form.arg1.value == "enable");
+   }
+}
+ 
+
+function checkSTORAGE(form)
+{
+	form.arg6.value = form.storagesize.options[form.storagesize.selectedIndex].value;
+}
+
+function checkDATA(form)
+{
+	form.arg7.value = form.datacheck.options[form.datacheck.selectedIndex].value;
+}
+
+checkUSER(document.deluge_settings);
+checkSTORAGE(document.deluge_settings);
+checkDATA(document.deluge_settings);
+</script>
+]]>
+</INLINE>
+</FILE>
+
+<!-- event handler mount-->
+<FILE Name="/usr/local/emhttp/plugins/deluge/event/disks_mounted" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+source /boot/config/plugins/deluge/deluge.cfg
+if [ $SERVICE = enable ]; then
+/etc/rc.d/rc.deluged start
+fi
+]]>
+</INLINE>
+</FILE>
+
+<!-- event handler unmount-->
+<FILE Name="/usr/local/emhttp/plugins/deluge/event/unmounting_disks" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+/etc/rc.d/rc.deluged stop
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/tmp/deluge-install" Run="/bin/bash">
+<INLINE>
+<![CDATA[
+# include our config vars
+source /boot/config/plugins/deluge/deluge.cfg
+
+cd /tmp/
+
+
+rm /tmp/deluge-install
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/var/log/plugins/deluge">
+<INLINE>
+<![CDATA[
+
+]]>
+</INLINE>
+</FILE>
+
+</PLUGIN>
