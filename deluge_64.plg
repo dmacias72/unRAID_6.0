@@ -129,7 +129,7 @@ deluge_start()
 	fi
 
 	# if directory doesn't exist or deluge is not found, install it
-	if [ "$DATADIR" != "" ]; then
+	if [ ! -e "$DATADIR" ]; then
 		deluge_install
 	fi
 
