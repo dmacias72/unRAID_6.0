@@ -74,11 +74,6 @@ rm -f /tmp/plugin-prepare
 <MD5>4732518bff71c54e1b83468dbd97f63a</MD5>
 </FILE>
 
-<FILE Name="/boot/config/plugins/deluge/deluge.png">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/deluge.png</URL>
-</FILE>
-
-
 <!-- clean up previous install -->
 <FILE Name="/tmp/deluge-cleanup" Run="/bin/bash">
 <INLINE>
@@ -133,7 +128,7 @@ deluge_start()
 		return
 	fi
 
-	# if directory doesn't exist or sickbeard is not found, install it
+	# if directory doesn't exist or deluge is not found, install it
 	if [ "$DATADIR" != "" ]; then
 		deluge_install
 	fi
@@ -441,7 +436,7 @@ Title="Deluge"
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/deluge.png">
-<LOCAL>/boot/config/plugins/deluge/deluge.png</LOCAL>
+<LOCAL>/usr/share/icons/hicolor/48x48/apps/deluge.png</LOCAL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/device_status.png">
