@@ -110,9 +110,9 @@ rm /tmp/deluge-cleanup
 <![CDATA[
 # Deluge configuration:
 SERVICE="disable"
-DATADIR="/mnt/cache/.apps/deluge"
+DATADIR="/usr/local/deluge"
 PORT="8112"
-RUNAS="root"
+RUNAS="nobody"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
 ]]>
@@ -133,19 +133,19 @@ deluge_start()
 	fi
   
 	# no-op if already running
-	if [ -r /var/run/deluged.pid ]; then
+	if [ -r /var/run/deluged/deluged.pid ]; then
 		return
 	fi
 
  	chmod -R 0775 $DATADIR	
 
-	CMDLINE="sudo -u $RUNAS deluge"
+	CMDLINE="sudo -u $RUNAS /usr/bin/deluged --config=$DATADIR --logfile=$DATADIR/deluged.log  --pidfile=/var/run/deluged/deluged.pid"
 	echo "Starting Deluge BitTorrent Client: $CMDLINE"
 	sleep 1
 	nohup $CMDLINE  > /dev/null 2>&1 &
 
 	TIMER=0
-	while [ ! -e /var/run/deluged.pid ]; do
+	while [ ! -e /var/run/deluged/deluged.pid ]; do
 		sleep 1
 		let TIMER=$TIMER+1
 	        echo -n $TIMER
@@ -153,22 +153,28 @@ deluge_start()
         	        echo -n "deluged.pid not created for some reason"
                 	break
         	fi
-
 	done
+	nohup /usr/bin/deluge --ui=web --config=$DATADIR > /dev/null 2>&1 &	
 	echo "... OK"
 }
 
 deluge_stop()
 {
 	# no-op if not running
-	if [ ! -r /var/run/deluged.pid ]; then
+	if [ ! -r /var/run/deluged/deluged.pid ]; then
 		return
 	fi
 
 	echo "Stopping Deluge BitTorrent Client..."
 	sleep 1
+	kill $(cat /var/run/sickbeard/sickbeard.pid)
 	killall deluge
 	sleep 3
+
+	if [ -e /var/run/deluged/deluged.pid ]; then
+		kill -9 $(cat /var/run/deluged/deluged.pid )
+		rm /var/run/deluged/deluged.pid
+	fi
 	echo "... OK"
 	sleep 1
 }
@@ -244,7 +250,7 @@ deluge_enable()
 		write_config
 		fi
 	# enabling also starts it
-	if [ ! -f /var/run/deluged.pid ]; then
+	if [ ! -f /var/run/deluged/deluged.pid ]; then
 	deluge_start
 	fi
 }
@@ -261,10 +267,6 @@ deluge_install()
 {
 	echo "Installing latest version of Deluge BitTorrent Client..."
 	
-	if [ $DATADIR == "" ]; then
-		$DATADIR="/mnt/cache/.apps/deluge"
-	fi
-
 	if [ ! -e "$DATADIR" ]; then 
 		mkdir -p $DATADIR
 	fi
@@ -455,7 +457,7 @@ $deluge_installed = "yes";
 $deluge_rollback = file_exists( "/boot/config/plugins/deluge_64.plg.old" ) ? "yes" : "no";
 if ($deluge_installed=="yes")
 {	
-	$deluge_running = file_exists( "/var/run/deluged.pid") ? "yes" : "no";
+	$deluge_running = file_exists( "/var/run/deluged/deluged.pid") ? "yes" : "no";
 	if ($deluge_cfg[PLG_STORAGESIZE]=="yes")
 		$deluge_datasize = shell_exec ( "/etc/rc.d/rc.deluged storagesize $deluge_cfg[DATADIR]" );
 	if ($deluge_cfg[PLG_DATACHECK]=="yes")
@@ -726,15 +728,19 @@ fi
 # include our config vars
 source /boot/config/plugins/deluge/deluge.cfg
 
-cd /tmp/
-
+# create deluged-writable directory for pid file
+if [ ! -e /var/run/deluged ]; then
+	mkdir /var/run/deluged
+	chown $RUNAS:users /var/run/deluged
+	chmod 0777 /var/run/deluged
+fi
 
 rm /tmp/deluge-install
 ]]>
 </INLINE>
 </FILE>
 
-<FILE Name="/var/log/plugins/deluge">
+<FILE Name="/var/log/plugins/deluged">
 <INLINE>
 <![CDATA[
 

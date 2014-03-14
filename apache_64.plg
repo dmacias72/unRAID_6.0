@@ -306,14 +306,6 @@ apache_install()
 {
 	echo "Installing latest version of Apache Web Server..."
 	
-	if [ $DOCROOT == "" ]; then
-		$DOCROOT="/srv/httpd/htdocs"
-	fi
-
-	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
-	fi
-
 	if [ ! -e "$DOCROOT" ]; then 
 		mkdir -p $DOCROOT
 	fi
