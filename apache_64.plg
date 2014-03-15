@@ -98,26 +98,9 @@ rm -f /tmp/plugin-prepare
 <URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
 </FILE>
 
-<FILE Name="/boot/config/plugins/apache/httpd/httpd.conf">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/httpd.conf</URL>
+<FILE Name="/boot/config/plugins/apache/httpd.conf">
+<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd.conf</URL>
 </FILE>
-
-<FILE Name="/boot/config/plugins/apache/httpd/php.ini">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/php.ini</URL>
-</FILE>
-
-<FILE Name="/boot/config/plugins/apache/httpd/mod_php.conf">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mod_php.conf</URL>
-</FILE>
-
-<FILE Name="/boot/config/plugins/apache/httpd/mime.types">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/mime.types</URL>
-</FILE>
-
-<FILE Name="/boot/config/plugins/apache/httpd/magic">
-<URL>--no-check-certificate https://raw.github.com/dmacias72/unRAID_6.0/master/httpd/magic</URL>
-</FILE>
-
 
 <!-- clean up previous install -->
 <FILE Name="/tmp/apache-cleanup" Run="/bin/bash">
@@ -147,7 +130,7 @@ rm /tmp/apache-cleanup
 # Apache Web Server configuration:
 SERVICE="disable"
 DOCROOT="/srv/httpd/htdocs"
-HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
+HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 PORT="8088"
 RUNAS="root"
 PLG_STORAGESIZE="yes"
@@ -178,11 +161,13 @@ apache_start()
 	if [ ! -e "$DOCROOT" ]; then
 		apache_install
 	fi
-	chown -R $RUNAS:users "$DOCROOT"
+
+	if [ $DOCROOT != "/srv/httpd/htdocs" ]; then
+		rm -rf /var/www/htdocs
+		ln -sfT $DOCROOT /srv/httpd/htdocs
+	fi
+
  	chmod -R 0775 $DOCROOT	
-	ln -sfT $DOCROOT /srv/httpd/
-	ln -sfT $DOCROOT /srv/www
-	ln -sfT $DOCROOT /srv/httpd/htdocs
 	
 	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
 	echo "Starting Apache Web Server: $CMDLINE -c \"Listen $PORT\""
@@ -263,14 +248,7 @@ apache_change_settings()
 	DOCROOT="$3"
 	HTTPDCONF="$4"
 	
-	if [ $DOCROOT == "" ]; then
-		$DOCROOT="/srv/httpd/htdocs"
-	fi
 
-	if [ $HTTPDCONF == "" ]; then
-		$HTTPDCONF="/boot/config/plugins/apache/httpd/httpd.conf"
-	fi
-	
 	if [ $RUNAS != $1 ]; then
 		chown -R $1:users "$DOCROOT"
 	fi
@@ -311,16 +289,12 @@ apache_disable()
 apache_install()
 {
 	echo "Installing latest version of Apache Web Server..."
-	
+
 	if [ ! -e "$DOCROOT" ]; then 
 		mkdir -p $DOCROOT
 	fi
 	
-	chown -R $RUNAS:users "$DOCROOT" 
 	chmod -R 0775 $DOCROOT	
-	ln -sfT $DOCROOT /srv/httpd/
-	ln -sfT $DOCROOT /srv/www
-	ln -sfT $DOCROOT /srv/httpd/htdocs
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -787,8 +761,6 @@ mv -f /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
 tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --strip=3
 cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
-rm -R /etc/httpd
-ln -s /boot/config/plugins/apache/httpd /etc/httpd
 rm /tmp/apache-install
 ]]>
 </INLINE>
