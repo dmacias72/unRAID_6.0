@@ -174,10 +174,16 @@ apache_start()
 		return
 	fi
 
+	# if directory doesn't exist or apache is not found, install it
+	if [ ! -e "$DATADIR" ]; then
+		apache_install
+	fi
+	chown -R $RUNAS:users "$DOCROOT"
  	chmod -R 0775 $DOCROOT	
-	ln -sfT $DOCROOT /srv/httpd
+	ln -sfT $DOCROOT /srv/httpd/
 	ln -sfT $DOCROOT /srv/www
-
+	ln -sfT $DOCROOT /srv/httpd/htdocs
+	
 	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
 	echo "Starting Apache Web Server: $CMDLINE -c \"Listen $PORT\""
 	sleep 1
@@ -206,7 +212,7 @@ apache_stop()
 
 	echo "Stopping Apache Web Server..."
 	sleep 1
-	apachectl -k stop -f $HTTPDCONF
+	apachectl -k stop -f $HTTPDCONF > /dev/null 2>&1 &
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -312,6 +318,9 @@ apache_install()
 	
 	chown -R $RUNAS:users "$DOCROOT" 
 	chmod -R 0775 $DOCROOT	
+	ln -sfT $DOCROOT /srv/httpd/
+	ln -sfT $DOCROOT /srv/www
+	ln -sfT $DOCROOT /srv/httpd/htdocs
 	sleep 3
 	echo "... OK"
 	sleep 1
