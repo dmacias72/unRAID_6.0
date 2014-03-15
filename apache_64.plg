@@ -129,7 +129,7 @@ rm /tmp/apache-cleanup
 <![CDATA[
 # Apache Web Server configuration:
 SERVICE="disable"
-DOCROOT="/srv/httpd/htdocs"
+DOCROOT="/var/www/html"
 HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 PORT="8088"
 RUNAS="root"
@@ -162,10 +162,7 @@ apache_start()
 		apache_install
 	fi
 
-	if [ $DOCROOT != "/srv/httpd/htdocs" ]; then
-		rm -rf /var/www/htdocs
-		ln -sfT $DOCROOT /srv/httpd/htdocs
-	fi
+	ln -sfT $DOCROOT /srv/httpd/htdocs
 
  	chmod -R 0775 $DOCROOT	
 	
@@ -761,6 +758,8 @@ mv -f /tmp/libphp5.so /usr/lib64/httpd/modules/libphp5.so
 tar -x --file=/boot/packages/php-5.4.20-x86_64-1.txz usr/lib64/php/extensions --strip=3
 cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
+mv -T /var/www/htdocs /var/www/html
+ln -sfT /var/www/html /srv/httpd/htdocs
 rm /tmp/apache-install
 ]]>
 </INLINE>
