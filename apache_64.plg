@@ -175,7 +175,7 @@ apache_start()
 	fi
 
 	# if directory doesn't exist or apache is not found, install it
-	if [ ! -e "$DATADIR" ]; then
+	if [ ! -e "$DOCROOT" ]; then
 		apache_install
 	fi
 	chown -R $RUNAS:users "$DOCROOT"
