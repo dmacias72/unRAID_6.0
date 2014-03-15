@@ -188,6 +188,7 @@ deluge_restart()
 	sleep 1
 	deluge_start
 }
+
 deluge_buttonstart()
 {
 echo "Enabling Deluge"
