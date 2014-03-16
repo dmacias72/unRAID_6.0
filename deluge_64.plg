@@ -171,7 +171,7 @@ deluge_stop()
 	echo "Stopping Deluge BitTorrent Client..."
 	sleep 1
 	kill $(cat /var/run/deluged/deluged.pid)
-	killall -u $RUNAS deluge-web &>/dev/null
+	killall -9 -u $RUNAS deluge-web &>/dev/null
 	sleep 3
 
 	if [ -e /var/run/deluged/deluged.pid ]; then
