@@ -103,7 +103,7 @@ rm /tmp/deluge-cleanup
 SERVICE="disable"
 DATADIR="/usr/local/deluge"
 PORT="8112"
-RUNAS="root"
+RUNAS="nobody"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
 ]]>
@@ -134,11 +134,10 @@ deluge_start()
 	fi
 
 
-	CMDLINE="sudo -u $RUNAS /usr/bin/deluged --config=$DATADIR --logfile=$DATADIR/deluged.log  --pidfile=/var/run/deluged/deluged.pid"
-
-	echo "Starting Deluge BitTorrent Daemon: $CMDLINE"
+	echo "Starting Deluge BitTorrent Daemon"
 	sleep 1
-	nohup $CMDLINE  > /dev/null 2>&1 &
+
+	su - $RUNAS -c "export PYTHON_EGG_CACHE=$DATADIR/tmp && /usr/bin/deluged --config=$DATADIR --logfile=$DATADIR/deluged.log  --pidfile=/var/run/deluged/deluged.pid" &>/dev/null
 
 	TIMER=0
 	while [ ! -e /var/run/deluged/deluged.pid ]; do
@@ -153,12 +152,13 @@ deluge_start()
 	echo "... OK"
 	sleep 1
 
-	CMDLINE2="sudo -u $RUNAS /usr/bin/deluge-web --config=$DATADIR --port=$PORT --fork"	
-
-	echo "Starting Deluge BitTorrent Web Client: $CMDLINE2"	
+	echo "Starting Deluge BitTorrent Web Client"	
 	sleep 1
-	nohup $CMDLINE2  > /dev/null 2>&1 &
-	echo "... OK"
+
+	nohup su - $RUNAS -c "export PYTHON_EGG_CACHE=$DATADIR/tmp && /usr/bin/deluge-web --config=$DATADIR --port=$PORT --fork" > /dev/null 2>&1 &
+
+	echo "... Refresh Web Page"
+	
 }
 
 deluge_stop()
@@ -227,7 +227,7 @@ deluge_change_settings()
 	DATADIR="$3"
 	
 	if [ $DATADIR == "" ]; then
-		$DATADIR="/mnt/cache/.apps/deluge"
+		$DATADIR="/usr/local/deluge"
 	fi
 
 	if [ $RUNAS != $1 ]; then
@@ -273,6 +273,7 @@ deluge_install()
 	
 	if [ ! -e "$DATADIR" ]; then 
 		mkdir -p $DATADIR
+		mkdir -p $DATADIR/tmp
 	fi
 	
 	chown -R $RUNAS:users "$DATADIR" 
@@ -427,7 +428,7 @@ esac
 <![CDATA[
 Menu="NetworkServices"
 Icon="deluge.png"
-Version="1.0"
+Version="1.1"
 Author="dmacias"
 Type="php"
 Title="Deluge"
