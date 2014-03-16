@@ -276,7 +276,6 @@ deluge_install()
 	fi
 	
 	chown -R $RUNAS:users "$DATADIR" 
-	chmod -R 0775 $DATADIR	
 	sleep 3
 	echo "... OK"
 	sleep 1
