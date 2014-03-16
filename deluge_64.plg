@@ -103,7 +103,7 @@ rm /tmp/deluge-cleanup
 SERVICE="disable"
 DATADIR="/usr/local/deluge"
 PORT="8112"
-RUNAS="nobody"
+RUNAS="root"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
 ]]>
@@ -276,7 +276,6 @@ deluge_install()
 	fi
 	
 	chown -R $RUNAS:users "$DATADIR" 
-	chmod -R 0775 $DATADIR	
 	sleep 3
 	echo "... OK"
 	sleep 1
