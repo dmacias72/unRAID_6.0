@@ -103,7 +103,7 @@ rm /tmp/deluge-cleanup
 SERVICE="disable"
 DATADIR="/usr/local/deluge"
 PORT="8112"
-RUNAS="root"
+RUNAS="nobody"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
 ]]>
