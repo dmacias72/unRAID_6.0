@@ -58,7 +58,7 @@ shellinaboxd_start() {
   if [ -r /var/run/shellinaboxd/shellinaboxd.pid ]; then
     return
   fi
-  CMDLINE="cd /tmp && /usr/local/bin/shellinaboxd --background=/var/run/shellinaboxd/shellinaboxd.pid -s /:LOGIN --port=$PORT --user-css=$CSS"
+  CMDLINE="cd /tmp && /usr/sbin/shellinaboxd --background=/var/run/shellinaboxd/shellinaboxd.pid -s /:LOGIN --port=$PORT --user-css=$CSS"
   echo "Starting Shellinaboxd: $CMDLINE"
   sleep 1
   nohup $CMDLINE > /dev/null 2>&1 &
@@ -315,6 +315,7 @@ checkRUNNING(document.shellinaboxd_settings);
   $logfile = "/var/log/plugins/shellinaboxd";
   $configfile = "/boot/config/plugins/shellinaboxd/shellinaboxd.cfg";
   date_default_timezone_set(substr(readlink("/etc/localtime-copied-from"), 20));
+
   if (empty($_SERVER['SHELL']))
     $newline = "<br>";
   else
