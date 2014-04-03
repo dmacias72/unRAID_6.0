@@ -18,9 +18,9 @@ I have probably missed some credits here, not intentional but I do not have a pe
 <URL>http://www.slackware.com/~alien/sbrepos/14.1/x86_64/python-cheetah/python-cheetah-2.4.4-x86_64-1alien.tgz</URL>
 <MD5>f2e4ab251fe05c3c5e03bb5ed20b3b7a</MD5>
 </FILE>
-<FILE Name="/boot/packages/pyopenssl-0.11-x86_64-1alien.tgz" Run="upgradepkg --install-new">
-<URL>http://www.slackware.com/~alien/sbrepos/14.1/x86_64/pyopenssl/pyopenssl-0.11-x86_64-1alien.tgz</URL>
-<MD5>a2d3d4631868eac88708450b998ff8d4</MD5>
+<FILE Name="/boot/packages/pyOpenSSL-0.13.1-x86_64-1ponce.txz" Run="upgradepkg --install-new">
+<URL>http://ponce.cc/slackware/slackware64-14.1/packages/pyOpenSSL-0.13.1-x86_64-1ponce.txz</URL>
+<MD5>4352debfbed4212a3241d91b428fa47f</MD5>
 </FILE>
 <FILE Name="/boot/packages/sqlite-3.7.17-x86_64-1.txz" Run="upgradepkg --install-new">
 <URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/ap/sqlite-3.7.17-x86_64-1.txz</URL>
