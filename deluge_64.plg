@@ -90,7 +90,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-1.2
+1.2.1
 ]]>
 </INLINE>
 </FILE>
@@ -542,7 +542,6 @@ if ($deluge_installed=="yes")
 		</div>
 	<?endif;?><br/>
 	<? if ($deluge_installed=="yes"): ?>	
-		<center><hr size="3" width="50%" color="grey"></center>
 		<? if ($deluge_cfg[PLG_STORAGESIZE]=="yes"): ?>
 			<?=$deluge_datasize?>
 		<? endif; ?>
@@ -568,6 +567,7 @@ if ($deluge_installed=="yes")
 					</select>
 				</td>
 			</tr>
+
 			<tr>
 				<td>Data Directory:</td>
 				<td><input type="text" name="arg4" maxlength="60" value="<?=$deluge_cfg['DATADIR'];?>"></td>
@@ -617,7 +617,7 @@ if ($deluge_installed=="yes")
 			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
 		</div>
 	</form>
-	<br />
+	<br/>
 </div>
 
       </table>
