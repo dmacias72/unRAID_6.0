@@ -58,10 +58,10 @@ shellinaboxd_start() {
   if [ -r /var/run/shellinaboxd/shellinaboxd.pid ]; then
     return
   fi
-  CMDLINE="cd /tmp && /usr/sbin/shellinaboxd --background=/var/run/shellinaboxd/shellinaboxd.pid -s /:LOGIN --port=$PORT --user-css=$CSS"
+  CMDLINE="cd /tmp && /usr/sbin/shellinaboxd --background=/var/run/shellinaboxd/shellinaboxd.pid -s /:LOGIN --port=$PORT"
   echo "Starting Shellinaboxd: $CMDLINE"
   sleep 1
-  nohup $CMDLINE > /dev/null 2>&1 &
+  nohup $CMDLINE --user-css=$CSS > /dev/null 2>&1 &
 
   TIMER=0
   while [ ! -e /var/run/httpd.pid ]; do
