@@ -441,15 +441,15 @@ Title="Deluge"
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/device_status.png">
-<LOCAL>--no-check-certificate https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/device_status.png</LOCAL>
+<LOCAL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/device_status.png</LOCAL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/new_config.png">
-<LOCAL>--no-check-certificate https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/new_config.png</LOCAL>
+<LOCAL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/new_config.png</LOCAL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/information.png">
-<LOCAL>--no-check-certificate https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/information.png</LOCAL>
+<LOCAL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/information.png</LOCAL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/deluge.php">
