@@ -90,7 +90,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-1.3.1
+1.3.3
 ]]>
 </INLINE>
 </FILE>
@@ -132,12 +132,14 @@ deluge_start()
 	if [ ! -e "$DATADIR" ]; then
 		deluge_install
 	fi
+	if [[ $RUNAS != "root" && $RUNAS != "nobody" && ! -e "/home/$RUNAS" ]]; then 
+		deluge_install
+	fi
 
 	CMDLINE="sudo -u $RUNAS /usr/bin/deluged -c $DATADIR -l $DATADIR/deluged.log  -P /var/run/deluged/deluged.pid"
 
 	echo "Starting Deluge BitTorrent Daemon: $CMDLINE"
 	sleep 1
-	export PYTHON_EGG_CACHE=$DATADIR/tmp > /dev/null 2>&1 &
 	nohup $CMDLINE > /dev/null 2>&1 &
 	TIMER=0
 	while [ ! -e /var/run/deluged/deluged.pid ]; do
@@ -275,7 +277,10 @@ deluge_install()
 	
 	if [ ! -e "$DATADIR" ]; then 
 		mkdir -p $DATADIR
-		mkdir -p $DATADIR/tmp
+	fi
+	if [[ $RUNAS != "root" && $RUNAS != "nobody" && ! -e "/home/$RUNAS" ]]; then 
+		mkdir -p /home/$RUNAS
+		chown -R $RUNAS:users "/home/$RUNAS"
 	fi
 	
 	chown -R $RUNAS:users "$DATADIR" 
