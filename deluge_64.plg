@@ -90,7 +90,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-1.2.3
+1.3
 ]]>
 </INLINE>
 </FILE>
@@ -133,12 +133,12 @@ deluge_start()
 		deluge_install
 	fi
 
+	CMDLINE="sudo -u $RUNAS /usr/bin/deluged -c $DATADIR -l $DATADIR/deluged.log  -P /var/run/deluged/deluged.pid"
 
-	echo "Starting Deluge BitTorrent Daemon"
+	echo "Starting Deluge BitTorrent Daemon: $CMDLINE"
 	sleep 1
-
-	su - $RUNAS -c "export PYTHON_EGG_CACHE=$DATADIR/tmp && /usr/bin/deluged --config=$DATADIR --logfile=$DATADIR/deluged.log  --pidfile=/var/run/deluged/deluged.pid" &>/dev/null
-
+	su- $RUNAS -c "export PYTHON_EGG_CACHE=$DATADIR/tmp" > /dev/null 2>&1 &
+	nohup $CMDLINE > /dev/null 2>&1 &
 	TIMER=0
 	while [ ! -e /var/run/deluged/deluged.pid ]; do
 		sleep 1
@@ -152,12 +152,14 @@ deluge_start()
 	echo "... OK"
 	sleep 1
 
-	echo "Starting Deluge BitTorrent Web Client"	
+	CMDLINE2="sudo -u $RUNAS /usr/bin/deluge-web -c $DATADIR -p $PORT -f"
+
+	echo "Starting Deluge BitTorrent Web Client: $CMDLINE2"	
 	sleep 1
 
-	nohup su - $RUNAS -c "export PYTHON_EGG_CACHE=$DATADIR/tmp && /usr/bin/deluge-web --config=$DATADIR --port=$PORT --fork" > /dev/null 2>&1 &
+	nohup $CMDLINE2 > /dev/null 2>&1 &
 
-	echo "... Refresh Web Page"
+	echo "... Refreshing Web Page"
 	
 }
 
