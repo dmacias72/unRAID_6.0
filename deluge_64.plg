@@ -90,7 +90,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-1.3.3
+1.4
 ]]>
 </INLINE>
 </FILE>
@@ -132,9 +132,14 @@ deluge_start()
 	if [ ! -e "$DATADIR" ]; then
 		deluge_install
 	fi
-	if [[ $RUNAS != "root" && $RUNAS != "nobody" && ! -e "/home/$RUNAS" ]]; then 
-		deluge_install
-	fi
+	for file in $DATADIR/plugins/*.egg
+	do
+   	  if [ ! -d "$file" ]; then
+     	     mv "${file}" "${file}.zip"
+     	     unzip "${file}.zip" -d "${file}"
+	     rm "${file}.zip"
+	  fi
+	done
 
 	CMDLINE="sudo -u $RUNAS /usr/bin/deluged -c $DATADIR -l $DATADIR/deluged.log  -P /var/run/deluged/deluged.pid"
 
@@ -277,10 +282,6 @@ deluge_install()
 	
 	if [ ! -e "$DATADIR" ]; then 
 		mkdir -p $DATADIR
-	fi
-	if [[ $RUNAS != "root" && $RUNAS != "nobody" && ! -e "/home/$RUNAS" ]]; then 
-		mkdir -p /home/$RUNAS
-		chown -R $RUNAS:users "/home/$RUNAS"
 	fi
 	
 	chown -R $RUNAS:users "$DATADIR" 
@@ -743,6 +744,14 @@ if [ ! -e /var/run/deluged ]; then
 	chown $RUNAS:users /var/run/deluged
 	chmod 0777 /var/run/deluged
 fi
+for file in /usr/lib64/python2.7/site-packages/deluge/plugins/*.egg
+do
+   if [ ! -d "$file" ]; then
+      mv "${file}" "${file}.zip"
+      unzip "${file}.zip" -d "${file}"
+      rm "${file}.zip"
+   fi
+done
 
 rm /tmp/deluge-install
 ]]>
