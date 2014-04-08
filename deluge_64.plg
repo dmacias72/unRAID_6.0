@@ -132,14 +132,6 @@ deluge_start()
 	if [ ! -e "$DATADIR" ]; then
 		deluge_install
 	fi
-	for file in $DATADIR/plugins/*.egg
-	do
-   	  if [ ! -d "$file" ]; then
-     	     mv "${file}" "${file}.zip"
-     	     unzip "${file}.zip" -d "${file}"
-	     rm "${file}.zip"
-	  fi
-	done
 
 	CMDLINE="sudo -u $RUNAS /usr/bin/deluged -c $DATADIR -l $DATADIR/deluged.log  -P /var/run/deluged/deluged.pid"
 
