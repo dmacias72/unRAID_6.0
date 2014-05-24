@@ -577,7 +577,7 @@ if ($deluge_installed=="yes")
 			</tr>
 
 			<tr>
-				<td>Data Directory:</td>
+				<td>Install Directory:</td>
 				<td><input type="text" name="arg4" maxlength="60" value="<?=$deluge_cfg['DATADIR'];?>"></td>
 			</tr>
 			<tr>
