@@ -118,7 +118,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.0
+2.1
 ]]>
 </INLINE>
 </FILE>
@@ -456,15 +456,15 @@ Title="Web Server"
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/apache/device_status.png">
-<LOCAL>/boot/config/plugins/images/device_status.png</LOCAL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/device_status.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/apache/new_config.png">
-<LOCAL>/boot/config/plugins/images/new_config.png</LOCAL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/new_config.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/apache/information.png">
-<LOCAL>/boot/config/plugins/images/information.png</LOCAL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/information.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/apache/apache.php">

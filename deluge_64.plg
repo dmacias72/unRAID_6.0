@@ -449,15 +449,15 @@ Title="Deluge"
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/device_status.png">
-<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/device_status.png</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/device_status.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/new_config.png">
-<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/new_config.png</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/new_config.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/information.png">
-<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/information.png</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/unRAID_6.0/master/information.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/deluge.php">
