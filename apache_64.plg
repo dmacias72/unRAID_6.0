@@ -174,11 +174,13 @@ apache_start()
 	ln -sfT $DOCROOT /srv/httpd/htdocs
 
  	chmod -R 0775 $DOCROOT	
-	
+
+	$HTTPHOSTNAME=hostname	
+
 	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
-	echo "Starting Apache Web Server: $CMDLINE -c \"Listen $PORT\""
+	echo "Starting Apache Web Server: $CMDLINE -c "Listen $PORT" -c "Listen $HTTPHOSTNAME""
 	sleep 1
-	nohup $CMDLINE -c "Listen $PORT" > /dev/null 2>&1 &
+	nohup $CMDLINE -c "Listen $PORT" -c "Listen $HTTPHOSTNAME"> /dev/null 2>&1 &
 
 	TIMER=0
 	while [ ! -e /var/run/httpd.pid ]; do
