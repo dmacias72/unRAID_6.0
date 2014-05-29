@@ -42,7 +42,7 @@ rm -f /tmp/plugin-prepare
 <MD5>14962e47ea7b0228867e2315d57e4da3</MD5>
 </FILE>
 <FILE Name="/boot/packages/libtorrent-rasterbar-0.16.16-x86_64-1PTr.txz" Run="upgradepkg --install-new">
-<URL>--no-check-certificate https://copy.com/mwuNnbeoNGqlfojY/libtorrent-rasterbar-0.16.16-x86_64-1PTr.txz</URL>
+<URL>https://copy.com/mwuNnbeoNGqlfojY/libtorrent-rasterbar-0.16.16-x86_64-1PTr.txz</URL>
 <MD5>258817190a5c186ca27d9ee49b360d9e</MD5>
 </FILE>
 <FILE Name="/boot/packages/Mako-0.9.0-x86_64-1ponce.txz" Run="upgradepkg --install-new">
@@ -346,11 +346,11 @@ deluge_updateplg()
 	if [ -f deluge_64.plg ]; then
 	mv deluge_64.plg deluge_64.plg.old
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
+	wget -q https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/deluge_64.plg
 	else
 	echo "Updating plugin"
-	wget -q --no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
+	wget -q https://github.com/dmacias72/unRAID_6.0/raw/master/deluge_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/deluge_64.plg
 	fi
 }
@@ -449,15 +449,15 @@ Title="Deluge"
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/device_status.png">
-<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/device_status.png</URL>
+<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/device_status.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/new_config.png">
-<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/new_config.png</URL>
+<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/new_config.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/information.png">
-<URL>--no-check-certificate https://github.com/dmacias72/unRAID_6.0/raw/master/information.png</URL>
+<URL>https://github.com/dmacias72/unRAID_6.0/raw/master/information.png</URL>
 </FILE>
 
 <FILE Name="/usr/local/emhttp/plugins/deluge/deluge.php">
