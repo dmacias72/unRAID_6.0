@@ -45,6 +45,10 @@ rm -f /tmp/plugin-prepare
 <URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/n/php-5.4.20-x86_64-1.txz</URL>
 <MD5>b4462d5ca75e46b1b29c41bedbda6787</MD5>
 </FILE>
+<FILE Name="/boot/packages/sqlite-3.7.17-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/ap/sqlite-3.7.17-x86_64-1.txz</URL>
+<MD5>730417ec4d8158c6bb5862417107b9f4</MD5>
+</FILE>
 <FILE Name="/boot/packages/libmcrypt-2.5.8-x86_64-1.txz" Run="upgradepkg --install-new">
 <URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/l/libmcrypt-2.5.8-x86_64-1.txz</URL>
 <MD5>758bfc84d60a0d1bb8c1e51caaffe50f</MD5>
