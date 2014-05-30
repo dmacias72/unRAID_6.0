@@ -143,7 +143,6 @@ rm /tmp/apache-cleanup
 # Apache Web Server configuration:
 SERVICE="disable"
 DOCROOT="/var/www/html"
-HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 PORT="8088"
 RUNAS="nobody"
 PLG_STORAGESIZE="yes"
@@ -245,7 +244,6 @@ write_config()
 	echo "#Apache Web Server configuration:" > /boot/config/plugins/apache/apache.cfg
 	echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "DOCROOT=\"$DOCROOT\"" >> /boot/config/plugins/apache/apache.cfg
-	echo "HTTPDCONF=\"$HTTPDCONF\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "RUNAS=\"$RUNAS\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PLG_STORAGESIZE=\"$PLG_STORAGESIZE\"" >> /boot/config/plugins/apache/apache.cfg
 	echo "PLG_DATACHECK=\"$PLG_DATACHECK\"" >> /boot/config/plugins/apache/apache.cfg
@@ -256,7 +254,6 @@ apache_change_settings()
 {
 	PORT="$2"
 	DOCROOT="$3"
-	HTTPDCONF="$4"
 	
 	if [ $RUNAS != $1 ]; then
 		chown -R $1:users "$DOCROOT"
@@ -499,12 +496,6 @@ if ($apache_installed=="yes")
 	if ($apache_cfg[PLG_DATACHECK]=="yes")
 		$apache_datacheck = shell_exec ( "/etc/rc.d/rc.apache datacheck" );
 	$apache_plgver = shell_exec ( "cat /boot/config/plugins/apache/plgver.txt" );
-
-	if (file_exists("$apache_cfg[HTTPDCONF]"))
-		$apache_curversion = shell_exec( "/etc/rc.d/rc.apache vercheck" );
-	else
-		$apache_curversion = "couldn't determine the Apache Web Server version";
-	$apache_newversion = "";
 }
 ?>
 
@@ -605,10 +596,6 @@ if ($apache_installed=="yes")
 				<td><input type="text" name="arg4" maxlength="60" value="<?=$apache_cfg['DOCROOT'];?>"></td>
 			</tr>
 			<tr>
-				<td>Server Config File:</td>
-				<td><input type="hidden" name="arg5" maxlength="60" value="<?=$apache_cfg['HTTPDCONF'];?>"></td>
-			</tr>
-			<tr>
 				<td>Port:</td>
 				<td><input type="text" name="arg3" maxlength="40" value="<?=$apache_cfg["PORT"];?>"></td>
 			</tr>
@@ -699,7 +686,6 @@ function checkRUNNING(form)
 		form.arg2.readOnly = true;
 		form.arg3.readOnly = true;
 		form.arg4.readOnly = true;
-		form.arg5.readOnly = true;
 		form.arg6.readOnly = true;
 		form.arg7.readOnly = true;
 		form.runas.disabled = true;
@@ -711,7 +697,6 @@ function checkRUNNING(form)
 		form.arg2.readOnly = (form.arg1.value == "enable");
 		form.arg3.readOnly = (form.arg1.value == "enable");
 		form.arg4.readOnly = (form.arg1.value == "enable");
-		form.arg5.readOnly = (form.arg1.value == "enable");
 		form.arg6.readOnly = (form.arg1.value == "enable");
 		form.arg7.readOnly = (form.arg1.value == "enable");
 		form.runas.disabled = (form.arg1.value == "enable");
