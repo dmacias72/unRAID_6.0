@@ -131,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.3
+2.4
 ]]>
 </INLINE>
 </FILE>
@@ -174,8 +174,6 @@ apache_start()
 	if [ ! -e "$DOCROOT" ]; then
 		apache_install
 	fi
-
-	ln -sfT $DOCROOT /srv/httpd/htdocs
 
 	SERVERNAME=$(hostname)
 
@@ -258,7 +256,6 @@ apache_change_settings()
 	DOCROOT="$3"
 	HTTPDCONF="$4"
 	
-
 	if [ $RUNAS != $1 ]; then
 		chown -R $1:users "$DOCROOT"
 	fi
@@ -310,6 +307,7 @@ apache_install()
 	
 	chmod -R 0775 $DOCROOT
 	chown -R $RUNAS:users $DOCROOT
+	ln -sfT $DOCROOT /srv/httpd/htdocs
 	sleep 3
 	echo "... OK"
 	sleep 1
