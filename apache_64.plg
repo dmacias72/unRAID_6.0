@@ -408,10 +408,10 @@ case "$1" in
 		apache_restart
 	;;
 	'enable')
-		apache_enable $2 $3 $4 $5 $6 $7 $8
+		apache_enable $2 $3 $4 $5 $6 $7 
 	;;
 	'disable')
-		apache_disable $2 $3 $4 $5 $6 $7 $8
+		apache_disable $2 $3 $4 $5 $6 $7
 	;;
 	'install')
 		apache_install
@@ -616,7 +616,7 @@ if ($apache_installed=="yes")
 						<?=mk_option($apache_cfg['PLG_STORAGESIZE'], "yes", "Yes");?>
 						<?=mk_option($apache_cfg['PLG_STORAGESIZE'], "no", "No");?>
 					</select>
-					<input type="hidden" name="arg6" value="<?=$apache_cfg['PLG_STORAGESIZE'];?>">
+					<input type="hidden" name="arg5" value="<?=$apache_cfg['PLG_STORAGESIZE'];?>">
 				</td>
 			</tr>
 			<tr>
@@ -626,7 +626,7 @@ if ($apache_installed=="yes")
 						<?=mk_option($apache_cfg['PLG_DATACHECK'], "yes", "Yes");?>
 						<?=mk_option($apache_cfg['PLG_DATACHECK'], "no", "No");?>
 					</select>
-					<input type="hidden" name="arg7" value="<?=$apache_cfg['PLG_DATACHECK'];?>">
+					<input type="hidden" name="arg6" value="<?=$apache_cfg['PLG_DATACHECK'];?>">
 				</td>
 			</tr>
 		</table>
@@ -685,8 +685,8 @@ function checkRUNNING(form)
 		form.arg2.readOnly = true;
 		form.arg3.readOnly = true;
 		form.arg4.readOnly = true;
+		form.arg5.readOnly = true;
 		form.arg6.readOnly = true;
-		form.arg7.readOnly = true;
 		form.runas.disabled = true;
 		form.storagesize.disabled = true;
 		form.datacheck.disabled = true;
@@ -696,8 +696,8 @@ function checkRUNNING(form)
 		form.arg2.readOnly = (form.arg1.value == "enable");
 		form.arg3.readOnly = (form.arg1.value == "enable");
 		form.arg4.readOnly = (form.arg1.value == "enable");
+		form.arg5.readOnly = (form.arg1.value == "enable");
 		form.arg6.readOnly = (form.arg1.value == "enable");
-		form.arg7.readOnly = (form.arg1.value == "enable");
 		form.runas.disabled = (form.arg1.value == "enable");
 		form.storagesize.disabled = (form.arg1.value == "enable");
 		form.datacheck.disabled = (form.arg1.value == "enable");
@@ -707,12 +707,12 @@ function checkRUNNING(form)
 
 function checkSTORAGE(form)
 {
-	form.arg6.value = form.storagesize.options[form.storagesize.selectedIndex].value;
+	form.arg5.value = form.storagesize.options[form.storagesize.selectedIndex].value;
 }
 
 function checkDATA(form)
 {
-	form.arg7.value = form.datacheck.options[form.datacheck.selectedIndex].value;
+	form.arg6.value = form.datacheck.options[form.datacheck.selectedIndex].value;
 }
 
 checkUSER(document.apache_settings);
