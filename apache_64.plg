@@ -110,6 +110,10 @@ rm -f /tmp/plugin-prepare
 <URL>https://raw.github.com/dmacias72/unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
+<FILE Name="/etc/httpd/php.ini">
+<URL>https://raw.github.com/dmacias72/unRAID_6.0/master/php.ini</URL>
+</FILE>
+
 
 <!-- clean up previous install -->
 <FILE Name="/tmp/apache-cleanup" Run="/bin/bash">
