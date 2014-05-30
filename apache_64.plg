@@ -110,7 +110,7 @@ rm -f /tmp/plugin-prepare
 <URL>https://raw.github.com/dmacias72/unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
-<FILE Name="/etc/httpd/php.ini">
+<FILE Name="/boot/config/plugins/apache/php.ini">
 <URL>https://raw.github.com/dmacias72/unRAID_6.0/master/php.ini</URL>
 </FILE>
 
@@ -181,10 +181,10 @@ apache_start()
 
 	SERVERNAME=$(hostname)
 
-	CMDLINE="sudo -u $RUNAS apachectl -k start -f $HTTPDCONF"
+	CMDLINE="sudo apachectl -k start -f $HTTPDCONF"
 	echo "Starting Apache Web Server: $CMDLINE -c "Listen $PORT" -c "ServerName $SERVERNAME""
 	sleep 1
-	nohup $CMDLINE -c "Listen $PORT" -c "ServerName $SERVERNAME"> /dev/null 2>&1 &
+	nohup $CMDLINE -c "Listen $PORT" -c "ServerName $SERVERNAME" -c "User $RUNAS" -c "Group users"> /dev/null 2>&1 &
 
 	TIMER=0
 	while [ ! -e /var/run/httpd.pid ]; do
@@ -306,7 +306,8 @@ apache_install()
 		mkdir -p $DOCROOT
 	fi
 	
-	chmod -R 0775 $DOCROOT	
+	chmod -R 0775 $DOCROOT
+	chown -R $RUNAS:users $DOCROOT
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -776,6 +777,7 @@ rm -rf extensions/
 mv -T /var/www/htdocs /var/www/html
 ln -sfT /var/www/html /srv/httpd/htdocs
 rm /tmp/apache-install
+ln -sfT /boot/config/plugins/apache/php.ini /etc/httpd/php.ini
 ]]>
 </INLINE>
 </FILE>
