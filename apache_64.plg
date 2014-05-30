@@ -408,10 +408,10 @@ case "$1" in
 		apache_restart
 	;;
 	'enable')
-		apache_enable $2 $3 $4 $5 $6 $7 
+		apache_enable $2 $3 $4 $5 $6 
 	;;
 	'disable')
-		apache_disable $2 $3 $4 $5 $6 $7
+		apache_disable $2 $3 $4 $5 $6 
 	;;
 	'install')
 		apache_install
