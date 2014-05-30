@@ -145,7 +145,7 @@ SERVICE="disable"
 DOCROOT="/var/www/html"
 HTTPDCONF="/boot/config/plugins/apache/httpd.conf"
 PORT="8088"
-RUNAS="root"
+RUNAS="nobody"
 PLG_STORAGESIZE="yes"
 PLG_DATACHECK="yes"
 ]]>
