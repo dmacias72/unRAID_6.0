@@ -131,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.5
+2.6
 ]]>
 </INLINE>
 </FILE>
@@ -273,15 +273,10 @@ apache_change_settings()
 apache_enable()
 {
 	# if not already enabled, enable it
-		SERVICE=enable
-		if [ $PORT != $2 ];then
-		apache_change_settings $1 $2 $3 $4 $5 $6 $7
-		write_config
+	SERVICE=enable
+	apache_change_settings $1 $2 $3 $4 $5 $6 $7
+	write_config
         apache_restart
-		else
-		apache_change_settings $1 $2 $3 $4 $5 $6 $7
-		write_config
-		fi
 	# enabling also starts it
 	if [ ! -f /var/run/httpd.pid ]; then
 	apache_start
