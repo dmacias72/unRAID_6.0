@@ -262,6 +262,10 @@ apache_change_settings()
 		chown -R $1:users "$DOCROOT"
 	fi
 
+	if [ $DOCROOT != $3 ]; then
+		ln -sfT $DOCROOT /srv/httpd/htdocs
+	fi
+
 	RUNAS="$1"
 	
 	PLG_STORAGESIZE="$5"
