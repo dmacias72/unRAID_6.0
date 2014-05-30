@@ -131,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.2
+2.3
 ]]>
 </INLINE>
 </FILE>
@@ -572,7 +572,6 @@ if ($apache_installed=="yes")
 		</div>
 	<?endif;?><br/>
 	<? if ($apache_installed=="yes"): ?>	
-		<center><hr size="3" width="50%" color="grey"></center>
 		<? if ($apache_cfg[PLG_STORAGESIZE]=="yes"): ?>
 			<?=$apache_datasize?>
 		<? endif; ?>
@@ -652,7 +651,7 @@ if ($apache_installed=="yes")
 			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
 		</div>
 	</form>
-	<br />
+	<br/>
 </div>
 
       </table>
