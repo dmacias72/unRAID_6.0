@@ -174,6 +174,8 @@ apache_start()
 	if [ ! -e "$DOCROOT" ]; then
 		apache_install
 	fi
+	
+	ln -sfT $DOCROOT /srv/httpd/htdocs
 
 	SERVERNAME=$(hostname)
 
@@ -260,10 +262,6 @@ apache_change_settings()
 		chown -R $1:users "$DOCROOT"
 	fi
 
-	if [ $DOCROOT != $3]; then
-		ln -sfT $DOCROOT /srv/httpd/htdocs
-	fi	
-
 	RUNAS="$1"
 	
 	PLG_STORAGESIZE="$5"
@@ -307,7 +305,6 @@ apache_install()
 	
 	chmod -R 0775 $DOCROOT
 	chown -R $RUNAS:users $DOCROOT
-	ln -sfT $DOCROOT /srv/httpd/htdocs
 	sleep 3
 	echo "... OK"
 	sleep 1
