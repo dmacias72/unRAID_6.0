@@ -175,10 +175,6 @@ apache_start()
 		apache_install
 	fi
 
-	ln -sfT $DOCROOT /srv/httpd/htdocs
-
- 	chmod -R 0775 $DOCROOT	
-
 	SERVERNAME=$(hostname)
 
 	CMDLINE="sudo apachectl -k start -f $HTTPDCONF"
@@ -264,7 +260,11 @@ apache_change_settings()
 	if [ $RUNAS != $1 ]; then
 		chown -R $1:users "$DOCROOT"
 	fi
-	
+
+	if [ $DOCROOT != $3]; then
+		ln -sfT $DOCROOT /srv/httpd/htdocs
+	fi	
+
 	RUNAS="$1"
 	
 	PLG_STORAGESIZE="$5"
