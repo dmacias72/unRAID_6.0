@@ -491,9 +491,11 @@ if ($apache_installed=="yes")
 	if ($apache_cfg[PLG_DATACHECK]=="yes")
 		$apache_datacheck = shell_exec ( "/etc/rc.d/rc.apache datacheck" );
 	$apache_plgver = shell_exec ( "cat /boot/config/plugins/apache/plgver.txt" );
-	$apache_curversion = shell_exec( "/etc/rc.d/rc.apache vercheck" );
-	$apache_newversion = "";
-}
+	if (file_exists("/boot/config/plugins/apache/httpd.conf"))
+		$apache_curversion = shell_exec( "/etc/rc.d/rc.apache vercheck" );
+	else
+		$apache_curversion = "couldn't determine the Apache Web Server version";
+	$apache_newversion = "";}
 ?>
 
 <div style="width: 49%; float:left">
