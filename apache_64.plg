@@ -265,8 +265,8 @@ apache_change_settings()
 
 	RUNAS="$1"
 	
-	PLG_STORAGESIZE="$5"
-	PLG_DATACHECK="$6"
+	PLG_STORAGESIZE="$4"
+	PLG_DATACHECK="$5"
 	
 }
 
@@ -274,7 +274,7 @@ apache_enable()
 {
 	# if not already enabled, enable it
 	SERVICE=enable
-	apache_change_settings $1 $2 $3 $4 $5 $6 $7
+	apache_change_settings $1 $2 $3 $4 $5  
 	write_config
         apache_restart
 	# enabling also starts it
@@ -287,7 +287,7 @@ apache_disable()
 {
 	apache_stop
 	SERVICE=disable
-	apache_change_settings $1 $2 $3 $4 $5 $6 $7
+	apache_change_settings $1 $2 $3 $4 $5  
 	write_config
 }
 
