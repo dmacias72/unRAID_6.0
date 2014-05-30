@@ -90,7 +90,7 @@ rm /tmp/deluge-cleanup
 <FILE Name="/boot/config/plugins/deluge/plgver.txt">
 <INLINE>
 <![CDATA[
-1.4
+1.5
 ]]>
 </INLINE>
 </FILE>
@@ -255,11 +255,11 @@ deluge_enable()
 	# if not already enabled, enable it
 		SERVICE=enable
 		if [ $PORT != $2 ];then
-		deluge_change_settings $1 $2 $3 $4 $5 $6 $7
+		deluge_change_settings $1 $2 $3 $4 $5 
 		write_config
         deluge_restart
 		else
-		deluge_change_settings $1 $2 $3 $4 $5 $6 $7
+		deluge_change_settings $1 $2 $3 $4 $5 
 		write_config
 		fi
 	# enabling also starts it
@@ -272,7 +272,7 @@ deluge_disable()
 {
 	deluge_stop
 	SERVICE=disable
-	deluge_change_settings $1 $2 $3 $4 $5 $6 $7
+	deluge_change_settings $1 $2 $3 $4 $5 
 	write_config
 }
 
@@ -392,10 +392,10 @@ case "$1" in
 		deluge_restart
 	;;
 	'enable')
-		deluge_enable $2 $3 $4 $5 $6 $7
+		deluge_enable $2 $3 $4 $5 $6 
 	;;
 	'disable')
-		deluge_disable $2 $3 $4 $5 $6 $7
+		deluge_disable $2 $3 $4 $5 $6
 	;;
 	'install')
 		deluge_install
