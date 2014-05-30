@@ -131,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.4
+2.5
 ]]>
 </INLINE>
 </FILE>
@@ -177,8 +177,8 @@ apache_start()
 
 	SERVERNAME=$(hostname)
 
-	CMDLINE="sudo apachectl -k start -f $HTTPDCONF"
-	echo "Starting Apache Web Server: $CMDLINE -c "Listen $PORT" -c "ServerName $SERVERNAME""
+	CMDLINE="sudo apachectl -k start"
+	echo "Starting Apache Web Server: $CMDLINE -c "Listen $PORT""
 	sleep 1
 	nohup $CMDLINE -c "Listen $PORT" -c "ServerName $SERVERNAME" -c "User $RUNAS" -c "Group users"> /dev/null 2>&1 &
 
@@ -205,7 +205,7 @@ apache_stop()
 
 	echo "Stopping Apache Web Server..."
 	sleep 1
-	apachectl -k stop -f $HTTPDCONF > /dev/null 2>&1 &
+	apachectl -k stop > /dev/null 2>&1 &
 	sleep 3
 	echo "... OK"
 	sleep 1
@@ -605,7 +605,7 @@ if ($apache_installed=="yes")
 			</tr>
 			<tr>
 				<td>Server Config File:</td>
-				<td><input type="text" name="arg5" maxlength="60" value="<?=$apache_cfg['HTTPDCONF'];?>"></td>
+				<td><input type="hidden" name="arg5" maxlength="60" value="<?=$apache_cfg['HTTPDCONF'];?>"></td>
 			</tr>
 			<tr>
 				<td>Port:</td>
@@ -776,8 +776,9 @@ cp -rf extensions/ /usr/lib64/php/
 rm -rf extensions/
 mv -T /var/www/htdocs /var/www/html
 ln -sfT /var/www/html /srv/httpd/htdocs
-rm /tmp/apache-install
 ln -sfT /boot/config/plugins/apache/php.ini /etc/httpd/php.ini
+ln -sfT /boot/config/plugins/apache/httpd.conf /etc/httpd/httpd.conf
+rm /tmp/apache-install
 ]]>
 </INLINE>
 </FILE>
