@@ -175,6 +175,8 @@ apache_start()
 		apache_install
 	fi
 
+	ln -sfT $DOCROOT /srv/httpd/htdocs
+
 	SERVERNAME=$(hostname)
 
 	CMDLINE="sudo apachectl -k start -f $HTTPDCONF"
