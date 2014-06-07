@@ -97,22 +97,6 @@ rm -f /tmp/plugin-prepare
 <URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/x/libXdmcp-1.1.1-x86_64-1.txz</URL>
 <MD5>90ebfe2eb0c4e18604695d0b97205564</MD5>
 </FILE>
-<FILE Name="/boot/packages/aspell-0.60.6-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/l/aspell-0.60.6-x86_64-1.txz</URL>
-<MD5>6bd3ec561b48caefd45b24d2f69eac56</MD5>
-</FILE>
-<FILE Name="/boot/packages/libxslt-1.1.28-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/l/libxslt-1.1.28-x86_64-1.txz</URL>
-<MD5>d319e2f7ef877d606e23dbcf4bda86b2</MD5>
-</FILE>
-<FILE Name="/boot/packages/icu4c-51.2-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/l/icu4c-51.2-x86_64-1.txz</URL>
-<MD5>72fb7788fc380a5ede1e458f5e65971e</MD5>
-</FILE>
-<FILE Name="/boot/packages/enchant-1.6.0-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>http://slackware.cs.utah.edu/pub/slackware/slackware64-14.1/slackware64/l/enchant-1.6.0-x86_64-1.txz</URL>
-<MD5>02b0b57b7fb46e353aa21e8a8cf87860</MD5>
-</FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
 <URL>https://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
@@ -147,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.7
+2.8
 ]]>
 </INLINE>
 </FILE>
