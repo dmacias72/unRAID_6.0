@@ -99,19 +99,19 @@ rm -f /tmp/plugin-prepare
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
-<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/apache.png</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/apache.png</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd.conf">
-<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/httpd.conf</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/httpd.conf</URL>
 </FILE>
 
 <FILE Name="/etc/httpd/mod_php.conf">
-<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/mod_php.conf</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/php.ini">
-<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/php.ini</URL>
+<URL>https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/php.ini</URL>
 </FILE>
 
 
@@ -131,7 +131,7 @@ rm /tmp/apache-cleanup
 <FILE Name="/boot/config/plugins/apache/plgver.txt">
 <INLINE>
 <![CDATA[
-2.8
+3.0
 ]]>
 </INLINE>
 </FILE>
