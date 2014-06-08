@@ -99,19 +99,19 @@ rm -f /tmp/plugin-prepare
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/apache.png">
-<URL>https://raw.github.com/dmacias72/unRAID_6.0/master/apache.png</URL>
+<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/apache.png</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/httpd.conf">
-<URL>https://raw.github.com/dmacias72/unRAID_6.0/master/httpd.conf</URL>
+<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/httpd.conf</URL>
 </FILE>
 
 <FILE Name="/etc/httpd/mod_php.conf">
-<URL>https://raw.github.com/dmacias72/unRAID_6.0/master/mod_php.conf</URL>
+<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/mod_php.conf</URL>
 </FILE>
 
 <FILE Name="/boot/config/plugins/apache/php.ini">
-<URL>https://raw.github.com/dmacias72/unRAID_6.0/master/php.ini</URL>
+<URL>raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/php.ini</URL>
 </FILE>
 
 
@@ -362,11 +362,11 @@ apache_updateplg()
 	if [ -f apache_64.plg ]; then
 	mv apache_64.plg apache_64.plg.old
 	echo "Updating plugin"
-	wget -q https://github.com/dmacias72/unRAID_6.0/raw/master/apache_64.plg
+	wget -q https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/apache_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/apache_64.plg
 	else
 	echo "Updating plugin"
-	wget -q https://github.com/dmacias72/unRAID_6.0/raw/master/apache_64.plg
+	wget -q https://raw.githubusercontent.com/dmacias72/Apache_unRAID_6.0/master/apache_64.plg
 	/usr/local/sbin/installplg /boot/config/plugins/apache_64.plg
 	fi
 }
