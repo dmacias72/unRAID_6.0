@@ -1,5 +1,3 @@
-unRAID_6.0
-==========
-Plugins for unRAID 6.0 x86_64 beta 4 and above. Do not install on 32 bit unRAID 5
+**APC UPS Daemon**
 
-These have been modified to work on unRAID 6.0 beta 3 and above.  I removed all packages that are already included in unRAID beta4+ ie python, curl etc.  Updated all packages to their Slackware64 14.1 equivalent. Edited plugin to update from here.
+Apcupsd is a UPS control system that permits orderly shutdown of your computer in the event of a power failure.
