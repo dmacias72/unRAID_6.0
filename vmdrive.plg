@@ -41,7 +41,7 @@ The vmdrive plugin mounts an additional drive outside of the array, before addit
 <!--
 Install Script
 -->
-<FILE Name="/tmp/vmdrive-install" Run="/bin/bash">
+<FILE Run="/bin/bash" Method="install">
 <INLINE>
 if mount | grep -q /mnt/domains; then
   echo "Virtual Machine drive mounted"
