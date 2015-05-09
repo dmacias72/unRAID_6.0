@@ -13,8 +13,8 @@
          author="&author;"
          version="&version;"
          pluginURL="&pluginURL;"
-	 emhttp="&emhttp;"
-	 disk="&disk;">
+         emhttp="&emhttp;"
+         disk="&disk;">
 
 <!--
 2012-04-20 - Neil Robinson: First release
