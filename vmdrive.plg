@@ -50,11 +50,12 @@ else
   if [ ! -d /mnt/domains ]; then
     mkdir /mnt/domains
   fi
-  mount -rw -o noatime,nodiratime,discard -t xfs /dev/disk/by-id/&disk; /mnt/domains 2>&1
+  mount -rw -o noatime,nodiratime,discard -t xfs /dev/disk/by-id/&disk; /mnt/domains
 fi
+
 ln -sfT /usr/local/emhttp/plugins/dynamix/images/disk.png &emhttp;/vmdrive.png
+
 echo "Done."
-rm /tmp/vmdrive-install
 </INLINE>
 </FILE>
 
